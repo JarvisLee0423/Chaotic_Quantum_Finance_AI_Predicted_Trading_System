@@ -73,8 +73,8 @@ if __name__ == "__main__":
     model = Extractor()
     # Print the model structure.
     print(model)
-    # # Test the model.
-    # data = torch.randn((512, 1, 10, 46))
-    # print(data.shape)
-    # prediction = model(data)
-    # print(prediction.shape)
+    # Test the model.
+    data = torch.randn((512, 1, 10, 46))
+    print(data.shape)
+    prediction = model(data)
+    print(prediction.shape)
