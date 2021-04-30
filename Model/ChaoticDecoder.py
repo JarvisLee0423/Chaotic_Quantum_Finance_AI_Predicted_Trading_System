@@ -22,15 +22,16 @@ class ChaoticDecoder(nn.Module):
             - attention (ChaoticAttention), The Chaotic Attention.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, attention):
+    def __init__(self, inputSize, hiddenSize):
         # Create the super constructor.
         super(ChaoticDecoder, self).__init__()
         # Get the member variables.
         self.inputSize = inputSize
         self.hiddenSize = hiddenSize
+        # Create the Chaotic attention.
+        self.CAttention = ChaoticAttention(inputSize = inputSize + 4 * hiddenSize, hiddenSize = inputSize)
         # Create the Chaotic Decoder.
         self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize)
-        self.CAttention = attention
     
     # Create the forward propagation.
     def forward(self, x):
@@ -52,10 +53,8 @@ class ChaoticDecoder(nn.Module):
 
 # Create the main function to test the Chaotic Decoder.
 if __name__ == "__main__":
-    # Create the Chaotic Attention.
-    CAttention = ChaoticAttention(36, 20)
     # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(20, 4, CAttention)
+    CDecoder = ChaoticDecoder(20, 4)
     # Test the Chaotic Decoder.
     x = torch.randn((32, 9, 20))
     output = CDecoder(x)
