@@ -25,7 +25,7 @@ class Extractor(nn.Module):
         # Get the extractor.
         self.extractor = self.modify()
     
-    # Create the forward.
+    # Create the forward propagation.
     def forward(self, x):
         output = self.extractor(x)
         return torch.reshape(output, (output.shape[0], output.shape[2], output.shape[3], output.shape[1])).squeeze()
