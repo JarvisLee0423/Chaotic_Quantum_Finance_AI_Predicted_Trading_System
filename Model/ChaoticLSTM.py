@@ -1,7 +1,7 @@
 '''
     Copyright:      JarvisLee
     Date:           5/1/2021
-    File Name:      LSTM.py
+    File Name:      ChaoticLSTM.py
     Description:    The Chaotic based Bi-directional Long Short-Term Memory Recurrent Neural Network Unit.
 '''
 
