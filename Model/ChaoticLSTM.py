@@ -41,15 +41,17 @@ class ChaoticLSTM(nn.Module):
             param.data.uniform_(-std, std)
     
     # Create the forward propagation.
-    def forward(self, x):
+    def forward(self, x, initStates = None):
         # Get the batch size and sequence size.
         bs, seqs, _ = x.size()
         # Create the list to store the output.
         output = [[], []]
-        # Initialize the hidden and cell.
-        ht, ct = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
-        # Initialize the inverse hidden and cell.
-        hinvt, cinvt = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
+        # Initialize the hidden, cell, inverse hidden and inverse cell.
+        if initStates is None:
+            ht, ct = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
+            hinvt, cinvt = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
+        else:
+            ht, ct, hinvt, cinvt = initStates
         # Compute the LSTM.
         for t in range(seqs):
             # Get the xt and xinvt.
