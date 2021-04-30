@@ -89,10 +89,8 @@ class ChaoticLSTM(nn.Module):
         output[0] = torch.cat(output[0], dim = 1)
         output[1] = torch.cat(output[1], dim = 1)
         output = torch.cat(output, dim = 2)
-        ht = torch.cat([ht, hinvt], dim = 1)
-        ct = torch.cat([ct, cinvt], dim = 1)
         # Return the output, hidden and cell.
-        return output, (ht, ct)
+        return output, (ht, ct, hinvt, cinvt)
 
 # Test the Chaotic LSTM.
 if __name__ == "__main__":
@@ -101,7 +99,9 @@ if __name__ == "__main__":
     # Test the Chaotic LSTM.
     x = torch.randn((32, 9, 4))
     print(x.shape)
-    output, (h, c) = CLSTM(x)
+    output, (h, c, hinv, cinv) = CLSTM(x)
     print(output.shape)
     print(h.shape)
     print(c.shape)
+    print(hinv.shape)
+    print(cinv.shape)
