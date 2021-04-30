@@ -17,13 +17,19 @@ import matplotlib.pyplot as plt
 
 # Create the class for the Lee-Oscillator.
 class LeeOscillator():
+    '''
+        The Lee-Oscillator based activation function.\n
+        Params:\n
+            - compute (bool: default -> True), compute is used to indicate whether compute the lee oscillator.\n
+    '''
     # Create the constructor.
-    def __init__(self):
+    def __init__(self, compute = True):
         # Create the super constructor.
         super(LeeOscillator, self).__init__()
         # Compute the Lee-Oscillator.
-        self.TanhCompute()
-        self.SigmoidCompute()
+        if compute:
+            self.TanhCompute()
+            self.SigmoidCompute()
 
     # Create the function to apply the Lee-Oscillator of tanh activation function.
     def Tanh(self, x):
