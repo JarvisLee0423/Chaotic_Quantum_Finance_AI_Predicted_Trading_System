@@ -33,7 +33,7 @@ class ChaoticEncoder(nn.Module):
         # Return the output and hidden.
         return output, hidden
 
-# Test the Chaotic Encoder.
+# Create the main function to test the Chaotic Encoder.
 if __name__ == "__main__":
     # Create the Chaotic Encoder.
     CEncoder = ChaoticEncoder(4, 10)
