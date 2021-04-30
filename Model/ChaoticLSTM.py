@@ -12,7 +12,7 @@ import torch.nn.functional as F
 import numpy as np
 from LeeOscillator import LeeOscillator
 
-# Create the class for the Long Short-Term Memory Unit.
+# Create the class for the Chaotic Bi-directional Long Short-Term Memory Unit.
 class ChaoticLSTM(nn.Module):
     # Create the constructor.
     def __init__(self, inputSize, hiddenSize):
