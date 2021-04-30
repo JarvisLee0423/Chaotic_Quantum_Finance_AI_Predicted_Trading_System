@@ -98,7 +98,7 @@ class ChaoticLSTM(nn.Module):
         # Return the output, hidden and cell.
         return output, (ht, ct, hinvt, cinvt)
 
-# Test the Chaotic LSTM.
+# Create the main function to test the Chaotic LSTM.
 if __name__ == "__main__":
     # Create the Chaotic LSTM unit.
     CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10)
