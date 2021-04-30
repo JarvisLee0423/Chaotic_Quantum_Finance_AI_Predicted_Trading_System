@@ -14,6 +14,12 @@ from LeeOscillator import LeeOscillator
 
 # Create the class for the Chaotic Bi-directional Long Short-Term Memory Unit.
 class ChaoticLSTM(nn.Module):
+    '''
+        The Chaotic Bi-directional Long Short-Term Memory Unit.\n
+        Params:\n
+            - inputSize (integer), The input size of the Chaotic LSTM.\n
+            - hiddenSize (integer), The output size of the Chaotic LSTM.\n
+    '''
     # Create the constructor.
     def __init__(self, inputSize, hiddenSize):
         # Create the super constructor.
