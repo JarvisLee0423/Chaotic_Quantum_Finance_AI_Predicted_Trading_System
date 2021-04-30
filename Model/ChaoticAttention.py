@@ -2,7 +2,7 @@
     Copyright:      JarvisLee
     Date:           5/1/2021
     File Name:      ChaoticAttention.py
-    Description:    The Lee-Oscillator based Attention Mechanism.
+    Description:    The Chaotic based Attention Mechanism.
 '''
 
 # Import the necessary library.
@@ -14,6 +14,11 @@ from ChaoticEncoder import ChaoticEncoder
 
 # Create the class for the Lee-Oscillator based Attention Mechanism.
 class ChaoticAttention(nn.Module):
+    '''
+        The Chaotic based Attention Mechanism.\n
+        Params:\n
+            - hiddenSize (integer), The input and output size unit of the Chaotic Attention Mechanism.\n
+    '''
     # Create the constructor.
     def __init__(self, hiddenSize):
         # Create the super constructor.
