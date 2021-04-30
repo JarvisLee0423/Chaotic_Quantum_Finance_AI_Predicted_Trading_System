@@ -13,6 +13,12 @@ from ChaoticLSTM import ChaoticLSTM
 
 # Create the class for the Chaotic Encoder.
 class ChaoticEncoder(nn.Module):
+    '''
+        The Chaotic Bi-directional LSTM Unit based Encoder.\n
+        Params:\n
+            - inputSize (integer), The input size of the Chaotic Encoder.\n
+            - hiddenSize (integer), The output size of the Chaotic Encoder.\n
+    '''
     # Create the constructor.
     def __init__(self, inputSize, hiddenSize):
         # Create the super constructor.
