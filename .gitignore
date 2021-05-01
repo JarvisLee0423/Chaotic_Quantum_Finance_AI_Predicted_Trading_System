@@ -6,3 +6,4 @@ Model/__pycache__/ChaoticEncoder.cpython-37.pyc
 Model/__pycache__/ChaoticLSTM.cpython-37.pyc
 Model/__pycache__/Extractor.cpython-37.pyc
 Model/__pycache__/LeeOscillator.cpython-37.pyc
+Model/__pycache__/FeaturesExtractor.cpython-37.pyc
