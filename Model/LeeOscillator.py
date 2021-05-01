@@ -6,14 +6,15 @@
 '''
 
 # Import the necessary library.
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import math
 import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.autograd import Variable
 
 # Create the class for the Lee-Oscillator.
 class LeeOscillator():
@@ -49,7 +50,7 @@ class LeeOscillator():
                     col = random.randint(0, 99)
                     output[i][j] = tanh.iat[row, col]
         # Return the output.
-        return output
+        return Variable(output, requires_grad = True)
 
     # Create the function to apply the Lee-Oscillator of sigmoid activation function.
     def Sigmoid(self, x):
@@ -69,7 +70,7 @@ class LeeOscillator():
                     col = random.randint(0, 99)
                     output[i][j] = sigmoid.iat[row, col]
         # Return the output.
-        return output
+        return Variable(output, requires_grad = True)
 
     # Create the function to compute the Lee-Oscillator of tanh activation function.
     def TanhCompute(self, a1 = 1, a2 = 1, a3 = 1, a4 = 1, b1 = -1, b2 = -1, b3 = -1, b4 = -1, K = 50, N = 600):
