@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from Extractor import Extractor
+from FeaturesExtractor import FeaturesExtractor
 from ChaoticEncoder import ChaoticEncoder
 from ChaoticDecoder import ChaoticDecoder
 
@@ -28,7 +28,7 @@ class ChaoticPredictor(nn.Module):
         # Create the super constructor.
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
-        self.extractor = Extractor()
+        self.extractor = FeaturesExtractor()
         # Create the encoder.
         self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize)
         # Create the decoder.
