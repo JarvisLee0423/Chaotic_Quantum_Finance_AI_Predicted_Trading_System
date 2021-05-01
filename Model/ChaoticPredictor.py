@@ -46,8 +46,8 @@ class ChaoticPredictor(nn.Module):
 # Create the function to test the Chaotic Predictor.
 if __name__ == "__main__":
     # Create the data.
-    x = torch.randn((16, 1, 10, 46)).to(device = "cuda")
-    y = torch.randn((16, 4)).to(device = "cuda")
+    x = torch.randn((512, 1, 10, 46)).to(device = "cuda")
+    y = torch.randn((512, 4)).to(device = "cuda")
     # Create the model.
     ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4).to(device = "cuda")
     # Create the optimizer.
