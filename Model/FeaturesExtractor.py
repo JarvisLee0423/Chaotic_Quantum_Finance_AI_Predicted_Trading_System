@@ -1,7 +1,7 @@
 '''
     Copyright:      JarvisLee
     Date:           4/29/2021
-    File Name:      Extractor.py
+    File Name:      FeaturesExtractor.py
     Description:    The ResNet18 based features extractor.
 '''
 
@@ -12,7 +12,7 @@ import torch.nn.functional as F
 from torchvision import models
 
 # Create the class for the extractor.
-class Extractor(nn.Module):
+class FeaturesExtractor(nn.Module):
     '''
         The ResNet-18 based features extractor.\n
         Input:  [batch_size, 1, 10, 46].\n
@@ -21,7 +21,7 @@ class Extractor(nn.Module):
     # Create the construction.
     def __init__(self):
         # Create the super constructor.
-        super(Extractor, self).__init__()
+        super(FeaturesExtractor, self).__init__()
         # Get the extractor.
         self.extractor = self.modify()
     
@@ -70,7 +70,7 @@ class Extractor(nn.Module):
 # Create the main function to test the extractor.
 if __name__ == "__main__":
     # Create the model.
-    model = Extractor()
+    model = FeaturesExtractor()
     # Print the model structure.
     print(model)
     # Test the model.
