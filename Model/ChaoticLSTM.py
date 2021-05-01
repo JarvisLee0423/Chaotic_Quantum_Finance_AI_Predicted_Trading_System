@@ -67,28 +67,28 @@ class ChaoticLSTM(nn.Module):
             gates = xt @ self.Wi + ht @ self.Wh + self.B
             # Get the value of each gate.
             it, ft, gt, ot = (
-                self.Lee.Sigmoid(gates[:, :self.hiddenSize]),
-                self.Lee.Sigmoid(gates[:, self.hiddenSize:self.hiddenSize * 2]),
-                self.Lee.Tanh(gates[:, self.hiddenSize * 2:self.hiddenSize * 3]),
-                self.Lee.Sigmoid(gates[:, self.hiddenSize * 3:])
+                self.Lee.Sigmoid(gates[:, :self.hiddenSize]).to(x.device),
+                self.Lee.Sigmoid(gates[:, self.hiddenSize:self.hiddenSize * 2]).to(x.device),
+                self.Lee.Tanh(gates[:, self.hiddenSize * 2:self.hiddenSize * 3]).to(x.device),
+                self.Lee.Sigmoid(gates[:, self.hiddenSize * 3:]).to(x.device)
             )
             # Compute the cell and hidden.
             ct = ft * ct + it * gt
-            ht = ot * self.Lee.Tanh(ct)
+            ht = ot * self.Lee.Tanh(ct).to(x.device)
             # Store the forward value.
             output[0].append(ht.unsqueeze(1))
             # Compute the backward.
             gatesInv = xinvt @ self.Wi + hinvt @ self.Wh + self.B
             # Get the value of each inverse gate.
             iinvt, finvt, ginvt, oinvt = (
-                self.Lee.Sigmoid(gatesInv[:, :self.hiddenSize]),
-                self.Lee.Sigmoid(gatesInv[:, self.hiddenSize:self.hiddenSize * 2]),
-                self.Lee.Tanh(gatesInv[:, self.hiddenSize * 2:self.hiddenSize * 3]),
-                self.Lee.Sigmoid(gatesInv[:, self.hiddenSize * 3:])
+                self.Lee.Sigmoid(gatesInv[:, :self.hiddenSize]).to(x.device),
+                self.Lee.Sigmoid(gatesInv[:, self.hiddenSize:self.hiddenSize * 2]).to(x.device),
+                self.Lee.Tanh(gatesInv[:, self.hiddenSize * 2:self.hiddenSize * 3]).to(x.device),
+                self.Lee.Sigmoid(gatesInv[:, self.hiddenSize * 3:]).to(x.device)
             )
             # Compute the inverse cell and hidden.
             cinvt = finvt * cinvt + iinvt * ginvt
-            hinvt = oinvt * self.Lee.Tanh(cinvt)
+            hinvt = oinvt * self.Lee.Tanh(cinvt).to(x.device)
             # Store the backward value.
             output[1].append(hinvt.unsqueeze(1))
         # Concatenate the output, hidden and cell.
