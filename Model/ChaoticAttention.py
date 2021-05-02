@@ -34,7 +34,7 @@ class ChaoticAttention(nn.Module):
         alpha[:, :, :x.shape[2]] = x
         alpha[:, :, x.shape[2]:] = torch.cat([h.unsqueeze(1), c.unsqueeze(1), hinv.unsqueeze(1), cinv.unsqueeze(1)], dim = 2)
         alpha = self.fc(alpha.reshape(-1, alpha.shape[2]))
-        alpha = self.Lee.Tanh(alpha).reshape(x.shape[0], x.shape[1], -1).to(x.device)
+        alpha = self.Lee.Sigmoid(alpha).reshape(x.shape[0], x.shape[1], -1).to(x.device)
         # Compute the context.
         context = torch.sum(alpha * x, dim = 1)
         # Return the context.
