@@ -32,7 +32,7 @@ class ChaoticPredictor(nn.Module):
         # Create the encoder.
         self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize)
         # Create the decoder.
-        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = outputSize)
+        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = 4 * hiddenSize, outputSize = outputSize)
     
     # Create the forward propagation.
     def forward(self, x):
@@ -46,8 +46,8 @@ class ChaoticPredictor(nn.Module):
 # Create the function to test the Chaotic Predictor.
 if __name__ == "__main__":
     # Create the data.
-    x = torch.randn((512, 1, 10, 46)).to(device = "cuda")
-    y = torch.randn((512, 4)).to(device = "cuda")
+    x = torch.randn((4, 1, 10, 46)).to(device = "cuda")
+    y = torch.randn((4, 4)).to(device = "cuda")
     # Create the model.
     ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4).to(device = "cuda")
     # Create the optimizer.
