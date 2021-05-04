@@ -16,12 +16,16 @@ class ChaoticAttention(nn.Module):
     '''
         The Chaotic based Attention Mechanism.\n
         Params:\n
-            - hiddenSize (integer), The input and output size unit of the Chaotic Attention Mechanism.\n
+            - inputSize (integer), The input size of the Chaotic Attention Mechanism.\n
+            - hiddenSize (integer), The output size of the Chaotic Attention Mechanism.\n
+            - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize):
+    def __init__(self, inputSize, hiddenSize, chaotic = True):
         # Create the super constructor.
         super(ChaoticAttention, self).__init__()
+        # Get the chaotic controller.
+        self.chaotic = chaotic
         # Create the linear layer.
         self.fc = nn.Linear(inputSize, hiddenSize)
         # Create the Lee-Oscillator.
@@ -34,7 +38,13 @@ class ChaoticAttention(nn.Module):
         alpha[:, :, :x.shape[2]] = x
         alpha[:, :, x.shape[2]:] = torch.cat([h.unsqueeze(1), c.unsqueeze(1), hinv.unsqueeze(1), cinv.unsqueeze(1)], dim = 2)
         alpha = self.fc(alpha.reshape(-1, alpha.shape[2]))
-        alpha = self.Lee.Sigmoid(alpha).reshape(x.shape[0], x.shape[1], -1).to(x.device)
+        # Check whether use the lee oscillator.
+        if self.chaotic == True:
+            #print("Chaotic: " + str(self.chaotic))
+            alpha = self.Lee.Sigmoid(alpha).reshape(x.shape[0], x.shape[1], -1).to(x.device)
+        else:
+            #print("Chaotic: " + str(self.chaotic))
+            alpha = torch.sigmoid(alpha).reshape(x.shape[0], x.shape[1], -1).to(x.device)
         # Compute the context.
         context = torch.sum(alpha * x, dim = 1)
         # Return the context.
@@ -45,6 +55,14 @@ if __name__ == "__main__":
     # Create the Chaotic Attention Mechanism.
     CAttention = ChaoticAttention(inputSize = 36, hiddenSize = 20)
     # Test the Chaotic Attention Mechanism.
+    x = torch.randn((32, 9, 20))
+    hidden = (torch.zeros((32, 4)), torch.zeros((32, 4)), torch.zeros((32, 4)), torch.zeros((32, 4)))
+    context = CAttention(x, hidden[0], hidden[1], hidden[2], hidden[3])
+    print(context.shape)
+
+    # Create the normal Attention Mechanism.
+    CAttention = ChaoticAttention(inputSize = 36, hiddenSize = 20, chaotic = False)
+    # Test the normal Attention Mechanism.
     x = torch.randn((32, 9, 20))
     hidden = (torch.zeros((32, 4)), torch.zeros((32, 4)), torch.zeros((32, 4)), torch.zeros((32, 4)))
     context = CAttention(x, hidden[0], hidden[1], hidden[2], hidden[3])
