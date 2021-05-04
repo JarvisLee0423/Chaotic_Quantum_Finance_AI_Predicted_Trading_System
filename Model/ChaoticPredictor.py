@@ -21,18 +21,19 @@ class ChaoticPredictor(nn.Module):
         Params:\n
             - inputSize (integer), The input size of the Chaotic Encoder.\n
             - hiddenSize (integer), The output size of the Chaotic Encoder or input size unit of the Chaotic Decoder.\n
-            - outputSize (integer), The output size of the Chaotic Decoder.\n 
+            - outputSize (integer), The output size of the Chaotic Decoder.\n
+            - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, outputSize):
+    def __init__(self, inputSize, hiddenSize, outputSize, chaotic = True):
         # Create the super constructor.
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
         self.extractor = FeaturesExtractor()
         # Create the encoder.
-        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize)
+        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, chaotic = chaotic)
         # Create the decoder.
-        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = 4 * hiddenSize, outputSize = outputSize)
+        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = 4 * hiddenSize, outputSize = outputSize, chaotic = chaotic)
     
     # Create the forward propagation.
     def forward(self, x):
@@ -49,7 +50,7 @@ if __name__ == "__main__":
     x = torch.randn((4, 1, 10, 46)).to(device = "cuda")
     y = torch.randn((4, 4)).to(device = "cuda")
     # Create the model.
-    ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4).to(device = "cuda")
+    ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4, chaotic = False).to(device = "cuda")
     # Create the optimizer.
     optimizer = optim.RMSprop(ChaoticModel.parameters(), lr = 0.01)
     # Create the loss function.
