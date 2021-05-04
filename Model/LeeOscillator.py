@@ -21,16 +21,20 @@ class LeeOscillator():
     '''
         The Lee-Oscillator based activation function.\n
         Params:\n
-            - compute (bool: default -> True), compute is used to indicate whether compute the lee oscillator.\n
+            - a (list), The parameters list for Lee-Oscillator of Tanh.\n
+            - b (list), The parameters list for Lee-Oscillator of Sigmoid.\n
+            - K (integer), The K coefficient of the Lee-Oscillator.\n
+            - N (integer), The number of iterations of the Lee-Oscillator.\n
+            - compute (bool: default -> True), Compute is used to indicate whether compute the lee oscillator.\n
     '''
     # Create the constructor.
-    def __init__(self, compute = True):
+    def __init__(self, a = [1, 1, 1, 1, -1, -1, -1, -1], b = [0.6, 0.6, -0.5, 0.5, -0.6, -0.6, -0.5, 0.5], K = 50, N = 600, compute = True):
         # Create the super constructor.
         super(LeeOscillator, self).__init__()
         # Compute the Lee-Oscillator.
         if compute:
-            self.TanhCompute()
-            self.SigmoidCompute()
+            self.TanhCompute(a1 = a[0], a2 = a[1], a3 = a[2], a4 = a[3], b1 = a[4], b2 = a[5], b3 = a[6], b4 = a[7], K = K, N = N)
+            self.SigmoidCompute(a1 = b[0], a2 = b[1], a3 = b[2], a4 = b[3], b1 = b[4], b2 = b[5], b3 = b[6], b4 = b[7], K = K, N = N)
 
     # Create the function to apply the Lee-Oscillator of tanh activation function.
     def Tanh(self, x):
@@ -73,7 +77,7 @@ class LeeOscillator():
         return Variable(output, requires_grad = True)
 
     # Create the function to compute the Lee-Oscillator of tanh activation function.
-    def TanhCompute(self, a1 = 1, a2 = 1, a3 = 1, a4 = 1, b1 = -1, b2 = -1, b3 = -1, b4 = -1, K = 50, N = 600):
+    def TanhCompute(self, a1, a2, a3, a4, b1, b2, b3, b4, K, N):
         # Create the array to store and compute the value of the Lee-Oscillator.
         u = torch.zeros([N])
         v = torch.zeros([N])
@@ -107,7 +111,7 @@ class LeeOscillator():
         plt.show()
 
     # Create the function to compute the Lee-Oscillator of sigmoid activation function.
-    def SigmoidCompute(self, a1 = 0.6, a2 = 0.6, a3 = -0.5, a4 = 0.5, b1 = -0.6, b2 = -0.6, b3 = -0.5, b4 = 0.5, K = 50, N = 600):
+    def SigmoidCompute(self, a1, a2, a3, a4, b1, b2, b3, b4, K, N):
         # Create the array to store and compute the value of the Lee-Oscillator.
         u = torch.zeros([N])
         v = torch.zeros([N])
@@ -142,8 +146,11 @@ class LeeOscillator():
 
 # Create the main function to test the Lee-Oscillator.
 if __name__ == "__main__":
+    # Get the parameters list of the Lee-Oscillator.
+    a = [1, 1, 1, 1, -1, -1, -1, -1]
+    b = [0.6, 0.6, -0.5, 0.5, -0.6, -0.6, -0.5, 0.5]
     # Create the Lee-Oscillator's model.
-    Lee = LeeOscillator()
+    Lee = LeeOscillator(a, b, 50, 600)
     # Test the Lee-Oscillator.
     x = torch.randn((32, 1, 9, 4))
     x = torch.reshape(x, (32, 9, 4, 1))
