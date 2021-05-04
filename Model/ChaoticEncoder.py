@@ -18,13 +18,14 @@ class ChaoticEncoder(nn.Module):
         Params:\n
             - inputSize (integer), The input size of the Chaotic Encoder.\n
             - hiddenSize (integer), The output size of the Chaotic Encoder.\n
+            - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize):
+    def __init__(self, inputSize, hiddenSize, chaotic = True):
         # Create the super constructor.
         super(ChaoticEncoder, self).__init__()
         # Create the Chaotic Encoder.
-        self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize)
+        self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize, chaotic = chaotic)
     
     # Create the forward propagation.
     def forward(self, x):
@@ -37,6 +38,18 @@ class ChaoticEncoder(nn.Module):
 if __name__ == "__main__":
     # Create the Chaotic Encoder.
     CEncoder = ChaoticEncoder(4, 10)
+    # Test the Chaotic Encoder.
+    x = torch.randn((32, 9, 4))
+    print(x.shape)
+    output, hidden = CEncoder(x)
+    print(output.shape)
+    print(hidden[0].shape)
+    print(hidden[1].shape)
+    print(hidden[2].shape)
+    print(hidden[3].shape)
+
+    # Create the Chaotic Encoder.
+    CEncoder = ChaoticEncoder(4, 10, chaotic = False)
     # Test the Chaotic Encoder.
     x = torch.randn((32, 9, 4))
     print(x.shape)
