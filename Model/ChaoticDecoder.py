@@ -21,18 +21,19 @@ class ChaoticDecoder(nn.Module):
             - hiddenSize (integer), The output size of the Chaotic Decoder.\n
             - outputSize (integer), The output size of the Chaotic Decoder.\n 
             - attention (ChaoticAttention), The Chaotic Attention.\n
+            - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, outputSize):
+    def __init__(self, inputSize, hiddenSize, outputSize, chaotic = True):
         # Create the super constructor.
         super(ChaoticDecoder, self).__init__()
         # Get the member variables.
         self.inputSize = inputSize
         self.hiddenSize = hiddenSize
         # Create the Chaotic attention.
-        self.CAttention = ChaoticAttention(inputSize = inputSize + 4 * hiddenSize, hiddenSize = inputSize)
+        self.CAttention = ChaoticAttention(inputSize = inputSize + 4 * hiddenSize, hiddenSize = inputSize, chaotic = chaotic)
         # Create the Chaotic Decoder.
-        self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize)
+        self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize, chaotic = chaotic)
         # Create the Fully Connected Layer.
         self.fc = nn.Linear(2 * hiddenSize, outputSize)
     
@@ -58,6 +59,13 @@ class ChaoticDecoder(nn.Module):
 if __name__ == "__main__":
     # Create the Chaotic Decoder.
     CDecoder = ChaoticDecoder(20, 20, 4)
+    # Test the Chaotic Decoder.
+    x = torch.randn((32, 9, 20))
+    output = CDecoder(x)
+    print(output.shape)
+
+    # Create the Chaotic Decoder.
+    CDecoder = ChaoticDecoder(20, 20, 4, chaotic = False)
     # Test the Chaotic Decoder.
     x = torch.randn((32, 9, 20))
     output = CDecoder(x)
