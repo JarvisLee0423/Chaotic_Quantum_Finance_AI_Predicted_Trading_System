@@ -9,7 +9,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from ChaoticLSTM import ChaoticLSTM
+from Model.ChaoticLSTM import ChaoticLSTM
+from Model.LeeOscillator import LeeOscillator
 
 # Create the class for the Chaotic Encoder.
 class ChaoticEncoder(nn.Module):
@@ -18,14 +19,15 @@ class ChaoticEncoder(nn.Module):
         Params:\n
             - inputSize (integer), The input size of the Chaotic Encoder.\n
             - hiddenSize (integer), The output size of the Chaotic Encoder.\n
+            - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, chaotic = True):
+    def __init__(self, inputSize, hiddenSize, Lee, chaotic = True):
         # Create the super constructor.
         super(ChaoticEncoder, self).__init__()
         # Create the Chaotic Encoder.
-        self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize, chaotic = chaotic)
+        self.CLSTM = ChaoticLSTM(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
     
     # Create the forward propagation.
     def forward(self, x):
@@ -36,8 +38,10 @@ class ChaoticEncoder(nn.Module):
 
 # Create the main function to test the Chaotic Encoder.
 if __name__ == "__main__":
+    # Get the Lee-Oscillator.
+    Lee = LeeOscillator()
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10)
+    CEncoder = ChaoticEncoder(4, 10, Lee = Lee)
     # Test the Chaotic Encoder.
     x = torch.randn((32, 9, 4))
     print(x.shape)
@@ -49,7 +53,7 @@ if __name__ == "__main__":
     print(hidden[3].shape)
 
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, chaotic = False)
+    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, chaotic = False)
     # Test the Chaotic Encoder.
     x = torch.randn((32, 9, 4))
     print(x.shape)
