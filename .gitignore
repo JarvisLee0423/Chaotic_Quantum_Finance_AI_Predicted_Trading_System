@@ -7,3 +7,13 @@ Model/__pycache__/ChaoticLSTM.cpython-37.pyc
 Model/__pycache__/Extractor.cpython-37.pyc
 Model/__pycache__/LeeOscillator.cpython-37.pyc
 Model/__pycache__/FeaturesExtractor.cpython-37.pyc
+MQ4/FXTrainData/AUDJPY_Data.csv
+MQ4/FXTrainData/CADCHF_Data.csv
+MQ4/FXTrainData/CADJPY_Data.csv
+MQ4/FXTrainData/EURAUD_Data.csv
+MQ4/FXTrainData/EURCAD_Data.csv
+MQ4/FXTrainData/EURUSD_Data.csv
+MQ4/FXTrainData/GBPUSD_Data.csv
+MQ4/FXTrainData/USDCAD_Data.csv
+MQ4/FXTrainData/USDHKD_Data.csv
+MQ4/FXTrainData/USDJPY_Data.csv
