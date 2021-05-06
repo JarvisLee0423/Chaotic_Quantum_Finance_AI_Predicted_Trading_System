@@ -6,6 +6,7 @@
 '''
 
 # Import the necessary library.
+import os
 import math
 import random
 import numpy as np
@@ -25,54 +26,57 @@ class LeeOscillator():
             - b (list), The parameters list for Lee-Oscillator of Sigmoid.\n
             - K (integer), The K coefficient of the Lee-Oscillator.\n
             - N (integer), The number of iterations of the Lee-Oscillator.\n
-            - compute (bool: default -> True), Compute is used to indicate whether compute the lee oscillator.\n
+            - device (string), The device of the Lee-Oscillator.\n
     '''
     # Create the constructor.
-    def __init__(self, a = [1, 1, 1, 1, -1, -1, -1, -1], b = [0.6, 0.6, -0.5, 0.5, -0.6, -0.6, -0.5, 0.5], K = 50, N = 600, compute = True):
+    def __init__(self, a = [1, 1, 1, 1, -1, -1, -1, -1], b = [0.6, 0.6, -0.5, 0.5, -0.6, -0.6, -0.5, 0.5], K = 50, N = 600, device = "cpu"):
         # Create the super constructor.
         super(LeeOscillator, self).__init__()
-        # Compute the Lee-Oscillator.
-        if compute:
+        # Get the Lee-Oscillator.
+        if (not os.path.exists('./LeeOscillator-Tanh.csv')) and (not os.path.exists('./LeeOscillator-Sigmoid.csv')):
+            # Compute the Lee-Oscillator.
             self.TanhCompute(a1 = a[0], a2 = a[1], a3 = a[2], a4 = a[3], b1 = a[4], b2 = a[5], b3 = a[6], b4 = a[7], K = K, N = N)
             self.SigmoidCompute(a1 = b[0], a2 = b[1], a3 = b[2], a4 = b[3], b1 = b[4], b2 = b[5], b3 = b[6], b4 = b[7], K = K, N = N)
+        # Read the Lee-Oscillator. 
+        self.tanh = pd.read_csv('./LeeOscillator-Tanh.csv', index_col = (0))
+        self.sigmoid = pd.read_csv('./LeeOscillator-Sigmoid.csv', index_col = (0))
+        # Get the Lee-Oscillator.
+        self.tanh = torch.tensor(self.tanh.values).to(device)
+        self.sigmoid = torch.tensor(self.sigmoid.values).to(device)
 
     # Create the function to apply the Lee-Oscillator of tanh activation function.
     def Tanh(self, x):
-        # Get the Lee-Oscillator.
-        tanh = pd.read_csv('./LeeOscillator-Tanh.csv', index_col = (0))
         # Form the output tensor.
-        output = torch.zeros(x.shape)
+        output = torch.zeros(x.shape).to(x.device)
         # Get each value of the output.
         for i in range(0, output.shape[0]):
             for j in range(0, output.shape[1]):
                 if x[i][j] + 1 <= 0:
-                    output[i][j] = -0.999927
+                    output[i][j] = -0.9999
                 elif x[i][j] - 1 >= 0:
-                    output[i][j] = 0.999925
+                    output[i][j] = 0.9999
                 else:
                     row = math.floor((x[i][j] + 1) / 0.002)
                     col = random.randint(0, 99)
-                    output[i][j] = tanh.iat[row, col]
+                    output[i][j] = self.tanh[row][col]
         # Return the output.
         return Variable(output, requires_grad = True)
 
     # Create the function to apply the Lee-Oscillator of sigmoid activation function.
     def Sigmoid(self, x):
-        # Get the Lee-Oscillator.
-        sigmoid = pd.read_csv('./LeeOscillator-Sigmoid.csv', index_col = (0))
         # Form the output tensor.
-        output = torch.zeros(x.shape)
+        output = torch.zeros(x.shape).to(x.device)
         # Get each value of the output.
         for i in range(0, output.shape[0]):
             for j in range(0, output.shape[1]):
                 if x[i][j] + 1 <= 0:
-                    output[i][j] = 0.0000372
+                    output[i][j] = 0.0001
                 elif x[i][j] - 1 >= 0:
-                    output[i][j] = 0.999972831
+                    output[i][j] = 0.9999
                 else:
                     row = math.floor((x[i][j] + 1) / 0.002)
                     col = random.randint(0, 99)
-                    output[i][j] = sigmoid.iat[row, col]
+                    output[i][j] = self.sigmoid[row][col]
         # Return the output.
         return Variable(output, requires_grad = True)
 
