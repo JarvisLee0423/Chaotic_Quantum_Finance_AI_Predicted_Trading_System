@@ -10,9 +10,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from FeaturesExtractor import FeaturesExtractor
-from ChaoticEncoder import ChaoticEncoder
-from ChaoticDecoder import ChaoticDecoder
+from Model.FeaturesExtractor import FeaturesExtractor
+from Model.ChaoticEncoder import ChaoticEncoder
+from Model.ChaoticDecoder import ChaoticDecoder
+from Model.LeeOscillator import LeeOscillator
 
 # Create the class for the Chaotic Predictor.
 class ChaoticPredictor(nn.Module):
@@ -22,18 +23,19 @@ class ChaoticPredictor(nn.Module):
             - inputSize (integer), The input size of the Chaotic Encoder.\n
             - hiddenSize (integer), The output size of the Chaotic Encoder or input size unit of the Chaotic Decoder.\n
             - outputSize (integer), The output size of the Chaotic Decoder.\n
+            - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, outputSize, chaotic = True):
+    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = True):
         # Create the super constructor.
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
         self.extractor = FeaturesExtractor()
         # Create the encoder.
-        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, chaotic = chaotic)
+        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
         # Create the decoder.
-        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = 4 * hiddenSize, outputSize = outputSize, chaotic = chaotic)
+        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = 4 * hiddenSize, outputSize = outputSize, Lee = Lee, chaotic = chaotic)
     
     # Create the forward propagation.
     def forward(self, x):
@@ -46,11 +48,13 @@ class ChaoticPredictor(nn.Module):
     
 # Create the function to test the Chaotic Predictor.
 if __name__ == "__main__":
+    # Get the Lee-Oscillator.
+    Lee = LeeOscillator(device = "cuda")
     # Create the data.
     x = torch.randn((4, 1, 10, 46)).to(device = "cuda")
     y = torch.randn((4, 4)).to(device = "cuda")
     # Create the model.
-    ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4, chaotic = False).to(device = "cuda")
+    ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4, Lee = Lee, chaotic = True).to(device = "cuda")
     # Create the optimizer.
     optimizer = optim.RMSprop(ChaoticModel.parameters(), lr = 0.01)
     # Create the loss function.
