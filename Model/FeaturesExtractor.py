@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # Print the model structure.
     print(model)
     # Test the model.
-    data = torch.randn((512, 1, 10, 46))
+    data = torch.randn((32, 1, 10, 46))
     print(data.shape)
     prediction = model(data)
     print(prediction.shape)
