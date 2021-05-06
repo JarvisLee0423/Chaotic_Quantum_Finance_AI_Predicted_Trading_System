@@ -10,7 +10,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from LeeOscillator import LeeOscillator
+from Model.LeeOscillator import LeeOscillator
 
 # Create the class for the Chaotic Bi-directional Long Short-Term Memory Unit.
 class ChaoticLSTM(nn.Module):
@@ -19,10 +19,11 @@ class ChaoticLSTM(nn.Module):
         Params:\n
             - inputSize (integer), The input size of the Chaotic LSTM.\n
             - hiddenSize (integer), The output size of the Chaotic LSTM.\n
+            - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, chaotic = True):
+    def __init__(self, inputSize, hiddenSize, Lee, chaotic = True):
         # Create the super constructor.
         super(ChaoticLSTM, self).__init__()
         # Get the member variables.
@@ -38,7 +39,7 @@ class ChaoticLSTM(nn.Module):
         # Initialize the parameters.
         self.initParams()
         # Create the chaotic activation function.
-        self.Lee = LeeOscillator(compute = False)
+        self.Lee = Lee
 
     # Initialize the parameters.
     def initParams(self):
@@ -129,8 +130,10 @@ class ChaoticLSTM(nn.Module):
 
 # Create the main function to test the Chaotic LSTM.
 if __name__ == "__main__":
+    # Get the Lee-Oscillator.
+    Lee = LeeOscillator()
     # Create the Chaotic LSTM unit.
-    CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10)
+    CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10, Lee = Lee)
     # Test the Chaotic LSTM.
     x = torch.randn((32, 9, 4))
     print(x.shape)
@@ -142,7 +145,7 @@ if __name__ == "__main__":
     print(cinv.shape)
 
     # Create the Chaotic LSTM unit.
-    CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10, chaotic = False)
+    CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10, Lee = Lee, chaotic = False)
     # Test the Chaotic LSTM.
     x = torch.randn((32, 9, 4))
     print(x.shape)
