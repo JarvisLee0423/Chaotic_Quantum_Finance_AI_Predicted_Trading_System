@@ -4,7 +4,7 @@ K:50
 N:600
 Chaotic:True
 inputSize:4
-hiddenSize:20
+hiddenSize:10
 outputSize:4
 learningRate:0.01
 momentum:0.9
