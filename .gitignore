@@ -1,5 +1,4 @@
 
-Model/Test.py
 Model/__pycache__/ChaoticAttention.cpython-37.pyc
 Model/__pycache__/ChaoticDecoder.cpython-37.pyc
 Model/__pycache__/ChaoticEncoder.cpython-37.pyc
@@ -7,13 +6,13 @@ Model/__pycache__/ChaoticLSTM.cpython-37.pyc
 Model/__pycache__/Extractor.cpython-37.pyc
 Model/__pycache__/LeeOscillator.cpython-37.pyc
 Model/__pycache__/FeaturesExtractor.cpython-37.pyc
-MQ4/FXTrainData/AUDJPY_Data.csv
-MQ4/FXTrainData/CADCHF_Data.csv
-MQ4/FXTrainData/CADJPY_Data.csv
-MQ4/FXTrainData/EURAUD_Data.csv
-MQ4/FXTrainData/EURCAD_Data.csv
-MQ4/FXTrainData/EURUSD_Data.csv
-MQ4/FXTrainData/GBPUSD_Data.csv
-MQ4/FXTrainData/USDCAD_Data.csv
-MQ4/FXTrainData/USDHKD_Data.csv
-MQ4/FXTrainData/USDJPY_Data.csv
+FXTrade/FXTrainData/AUDJPY_Data.csv
+FXTrade/FXTrainData/CADCHF_Data.csv
+FXTrade/FXTrainData/CADJPY_Data.csv
+FXTrade/FXTrainData/EURAUD_Data.csv
+FXTrade/FXTrainData/EURCAD_Data.csv
+FXTrade/FXTrainData/EURUSD_Data.csv
+FXTrade/FXTrainData/GBPUSD_Data.csv
+FXTrade/FXTrainData/USDCAD_Data.csv
+FXTrade/FXTrainData/USDHKD_Data.csv
+FXTrade/FXTrainData/USDJPY_Data.csv
