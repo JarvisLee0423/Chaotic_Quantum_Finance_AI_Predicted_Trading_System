@@ -6,7 +6,7 @@ Chaotic:True
 inputSize:4
 hiddenSize:10
 outputSize:4
-learningRate:0.01
+learningRate:0.05
 momentum:0.9
 weightDecay:5e-05
 AccBound:0.3
@@ -17,4 +17,4 @@ seed:1
 GPUID:0
 modelDir:.//Checkpoints
 logDir:.//Logs
-dataDir:.//MQ4//FXTrainData
+dataDir:.//FXTrade//FXTrainData
