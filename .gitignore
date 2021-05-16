@@ -5,13 +5,6 @@ Model/__pycache__/ChaoticLSTM.cpython-37.pyc
 Model/__pycache__/Extractor.cpython-37.pyc
 Model/__pycache__/LeeOscillator.cpython-37.pyc
 Model/__pycache__/FeaturesExtractor.cpython-37.pyc
-FXTrade/FXTrainData/AUDJPY_Data.csv
-FXTrade/FXTrainData/CADCHF_Data.csv
-FXTrade/FXTrainData/CADJPY_Data.csv
-FXTrade/FXTrainData/EURAUD_Data.csv
-FXTrade/FXTrainData/EURCAD_Data.csv
-FXTrade/FXTrainData/EURUSD_Data.csv
-FXTrade/FXTrainData/GBPUSD_Data.csv
-FXTrade/FXTrainData/USDCAD_Data.csv
-FXTrade/FXTrainData/USDHKD_Data.csv
-FXTrade/FXTrainData/USDJPY_Data.csv
+*.pt
+*.txt
+*.csv
