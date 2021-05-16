@@ -28,7 +28,7 @@ class FeaturesExtractor(nn.Module):
     # Create the forward propagation.
     def forward(self, x):
         output = self.extractor(x)
-        return torch.reshape(output, (output.shape[0], output.shape[2], output.shape[3], output.shape[1])).squeeze()
+        return torch.reshape(output, (output.shape[0], output.shape[2], output.shape[3], output.shape[1])).squeeze(-1)
     
     # Create the function to modify the ResNet-18.
     def modify(self):
