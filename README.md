@@ -19,7 +19,7 @@ Description:
 
 Hyper-parameters Introduction:
 
-    - Hint: All the hyper-parameters' configurations are placed in the Params.txt file.
+    Hint: All the hyper-parameters' configurations are placed in the Params.txt file.
 
     - LeeTanhType is the type of the Lee-Oscillator based tanh activation function.
 
@@ -29,7 +29,7 @@ Hyper-parameters Introduction:
 
     - N is the hyper-parameter in the Lee-Oscillator.
 
-    - Hint: For more details of the Lee-Oscillator, please go through this link: https://www.researchgate.net/figure/Different-Parameter-Settings-used-in-LEE-Oscillator-RS-Model_tbl1_237242811 and download the paper of the Dr. Raymond Lee.
+    Hint: For more details of the Lee-Oscillator, please go through this link: https://www.researchgate.net/figure/Different-Parameter-Settings-used-in-LEE-Oscillator-RS-Model_tbl1_237242811 and download the paper of the Dr. Raymond Lee.
 
     - Chaotic is the controller of whether use the Lee-Oscillator to form the chaotic activation function.
 
@@ -39,7 +39,7 @@ Hyper-parameters Introduction:
 
     - outputSize is the output size for the LSTM unit.
     
-    - Warning: Please do not change the value of the inputSize and outputSize.
+    Warning: Please do not change the value of the inputSize and outputSize.
 
     - learningRate is the lr for gradient descent.
 
@@ -71,22 +71,22 @@ Hyper-parameters Introduction:
 
 Training Tools:
 
-    - The training tools is build by the JarvisLee in the past, if you are interested into it, please check in the following link: https://github.com/JarvisLee0423/Training_Tools. Glad to get your suggestions in the github.
+    The training tools is build by the JarvisLee in the past, if you are interested into it, please check in the following link: https://github.com/JarvisLee0423/Training_Tools. Glad to get your suggestions in the github.
 
 Data Preparation:
 
-    - Before training the model please copy the FXTrainData.mq4 into the MetaTrader4 software and run the codes to get the training data.
+    Before training the model please copy the FXTrainData.mq4 into the MetaTrader4 software and run the codes to get the training data.
 
-    - Then copy and paste your data into the directory you set in the Params.txt file.
+    Then copy and paste your data into the directory you set in the Params.txt file.
 
-    - For prediction, you can generate the data by yourself, and put it in your own directory.
+    For prediction, you can generate the data by yourself, and put it in your own directory.
 
 Training Methods:
 
-    - Warning: Before you train the model please ensure that you have already configured the environments by using the requirements.txt and open the visdom server by following the code into the DOS: python -m visdom.server.
+    Warning: Before you train the model please ensure that you have already configured the environments by using the requirements.txt and open the visdom server by following the code into the DOS: python -m visdom.server.
     If there are something wrong with open the server, please use the conda environment firstly.
 
-    - There are two methods to run the model.
+    There are two methods to run the model.
 
     - First one: Directly use the vscode to run the Trainer.py file. All the hyper-parameters can be changed in the Params.txt file manually.
 
@@ -94,12 +94,12 @@ Training Methods:
 
 Prediction:
 
-    - For prediction, please run the Predictor.py. And pay attention to the directories you configured in the Params.txt. All the csv file should be put correctly.
+    For prediction, please run the Predictor.py. And pay attention to the directories you configured in the Params.txt. All the csv file should be put correctly.
 
 Trading Strategy:
 
-    - The trading strategy is based on Fuzzy Logic.
+    The trading strategy is based on Fuzzy Logic.
 
-    - We design a Fuzzy Logic with the RPV (Relative Price Volatility) and RSI (Relative Strength Index).
+    We design a Fuzzy Logic with the RPV (Relative Price Volatility) and RSI (Relative Strength Index).
 
-    - More details please check the sub-routines in the FXTradeStrategy.mq4 file.
+    More details please check the sub-routines in the FXTradeStrategy.mq4 file.
