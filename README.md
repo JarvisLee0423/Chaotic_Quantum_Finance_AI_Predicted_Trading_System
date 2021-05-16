@@ -3,19 +3,19 @@
 
 Contributors:
 
-    - Jiahao Li:    https://github.com/JarvisLee0423
+    Jiahao Li:    https://github.com/JarvisLee0423
 
-    - Zihao Huang:  https://github.com/ZiHo
+    Zihao Huang:  https://github.com/ZiHo
 
-    - Yucheng Guo:  https://github.com/ViolaPal
+    Yucheng Guo:  https://github.com/ViolaPal
 
-    - Lirong Lin:   https://github.com/llr1006  
+    Lirong Lin:   https://github.com/llr1006  
 
 Description:
 
-    - This model is based on some advanced mordern AI technologies to do the trading prediction and connected with the fuzzy logic to make the descision.
+    This model is based on some advanced mordern AI technologies to do the trading prediction and connected with the fuzzy logic to make the descision.
 
-    - This model also contains the version of the model with the chaotic activation function (Lee-Oscillator).
+    This model also contains the version of the model with the chaotic activation function (Lee-Oscillator).
 
 Hyper-parameters Introduction:
 
@@ -86,7 +86,7 @@ Training Methods:
     - Warning: Before you train the model please ensure that you have already configured the environments by using the requirements.txt and open the visdom server by following the code into the DOS: python -m visdom.server.
     If there are something wrong with open the server, please use the conda environment firstly.
 
-    - There are two method to run the model.
+    - There are two methods to run the model.
 
     - First one: Directly use the vscode to run the Trainer.py file. All the hyper-parameters can be changed in the Params.txt file manually.
 
