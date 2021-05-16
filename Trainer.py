@@ -182,7 +182,7 @@ if __name__ == "__main__":
     # Initialize the visdom server.
     vis = Logger.VisConfigurator(currentTime = currentTime, visName = 'QuantumHLCOPredictor')
     # Initialize the logger.
-    logger = Logger.LogConfigurator(logDir = Cfg.logDir, filename = currentTime)
+    logger = Logger.LogConfigurator(logDir = Cfg.logDir, filename = f"{currentTime}.txt")
     # Log the hyperparameters.
     logger.info('\n' + Handler.Displayer(Cfg))
     # Get the data.
