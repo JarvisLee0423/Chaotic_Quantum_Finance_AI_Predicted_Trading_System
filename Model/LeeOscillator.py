@@ -30,8 +30,6 @@ class LeeOscillator():
     '''
     # Create the constructor.
     def __init__(self, a = [1, 1, 1, 1, -1, -1, -1, -1], b = [0.6, 0.6, -0.5, 0.5, -0.6, -0.6, -0.5, 0.5], K = 50, N = 600, device = "cpu"):
-        # Create the super constructor.
-        super(LeeOscillator, self).__init__()
         # Get the Lee-Oscillator.
         if (not os.path.exists('./LeeOscillator-Tanh.csv')) and (not os.path.exists('./LeeOscillator-Sigmoid.csv')):
             # Compute the Lee-Oscillator.
