@@ -13,3 +13,4 @@ Model/__pycache__/FeaturesExtractor.cpython-37.pyc
 Model/__pycache__/ChaoticPredictor.cpython-37.pyc
 *.pyc
 *.pyc
+Model/LeeOscillatorv2.py
