@@ -8,3 +8,8 @@ Model/__pycache__/FeaturesExtractor.cpython-37.pyc
 *.pt
 *.txt
 *.csv
+*.pyc
+*.pyc
+Model/__pycache__/ChaoticPredictor.cpython-37.pyc
+*.pyc
+*.pyc
