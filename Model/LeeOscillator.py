@@ -2,7 +2,7 @@
     Copyright:      JarvisLee
     Date:           4/30/2021
     File Name:      LeeOscillator.py
-    Description:    The Choatic activation function named Lee-Oscillator Based on Raymond Lee's paper.
+    Description:    The Choatic activation functions named Lee-Oscillator Based on Raymond Lee's paper.
 '''
 
 # Import the necessary library.
