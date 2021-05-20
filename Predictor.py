@@ -62,7 +62,7 @@ elif Cfg.LeeSigType == 'D' or Cfg.LeeSigType == 'd':
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Get the lee-oscillator.
-Lee = LeeOscillator.LeeOscillator(a = a, b = b, K = Cfg.K, N = Cfg.N, device = device)
+Lee = LeeOscillator.LeeOscillator(a = a, b = b, K = Cfg.K, N = Cfg.N)
 
 # Do the prediction.
 if __name__ == "__main__":
