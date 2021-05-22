@@ -6,13 +6,13 @@ Chaotic:True
 inputSize:4
 hiddenSize:10
 outputSize:4
-learningRate:0.0004
+learningRate:0.0001
 momentum:0.9
 weightDecay:5e-05
 AccBound:1e-5
 trainPercent:0.9
-batchSize:512
-epoches:50
+batchSize:32
+epoches:100
 seed:1
 GPUID:0
 modelDir:.//Checkpoints
