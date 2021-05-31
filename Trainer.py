@@ -12,10 +12,8 @@ import pynvml
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
-from torch.utils.data import DataLoader
 from tqdm import tqdm
 from Model import LeeOscillator, ChaoticPredictor
 from Utils.DataPreprocessor import Preprocessor
@@ -180,7 +178,7 @@ class Trainer():
 # Train the model.
 if __name__ == "__main__":
     # Initialize the visdom server.
-    vis = Logger.VisConfigurator(currentTime = currentTime, visName = 'QuantumHLCOPredictor')
+    vis = Logger.VisConfigurator(currentTime = currentTime, visName = 'HLCOPredictor')
     # Initialize the logger.
     logger = Logger.LogConfigurator(logDir = Cfg.logDir, filename = f"{currentTime}.txt")
     # Log the hyperparameters.
@@ -188,7 +186,7 @@ if __name__ == "__main__":
     # Get the data.
     trainSet, devSet = Preprocessor.FXTrainData(dataDir = Cfg.dataDir, batchSize = Cfg.batchSize, trainPercent = Cfg.trainPercent)
     # Create the model.
-    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic)
+    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN)
     # Send the model to the corresponding device.
     model = model.to(device)
     # Create the loss function.
@@ -215,4 +213,4 @@ if __name__ == "__main__":
         torch.save(model.state_dict(), Cfg.modelDir + f'/{currentTime}.pt')
         logger.info('Model Saved')
     # Close the visdom server.
-    Logger.VisSaver(vis, visName = 'QuantumHLCOPredictor')
+    Logger.VisSaver(vis, visName = 'HLCOPredictor')
