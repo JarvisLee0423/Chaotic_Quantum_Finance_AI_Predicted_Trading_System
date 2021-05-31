@@ -67,22 +67,22 @@ class Preprocessor():
             # Give the hint for completing reading one file's data.
             print(f"{filename}'s data reading is completed!")
         # Convert the list to be the tensor.
-        data = torch.tensor(np.array(data), dtype = torch.float32).unsqueeze(1)
+        data = torch.tensor(np.array(data), dtype = torch.float32)
         target = torch.tensor(np.array(target), dtype = torch.float32).squeeze()
         # Get the training data boundary.
         bound = int(data.shape[0] * trainPercent)
         # Generate the datasets.
-        trainSet = GetDataset(data[:bound, :, :, :], target[:bound, :])
-        devSet = GetDataset(data[bound:, :, :, :], target[bound:, :])
+        trainSet = GetDataset(data[:bound, :, :], target[:bound, :])
+        devSet = GetDataset(data[bound:, :, :], target[bound:, :])
         # Get the training data.
-        trainData = DataLoader(dataset = trainSet, batch_size = batchSize, shuffle = True, drop_last = False)
+        trainData = DataLoader(dataset = trainSet, batch_size = batchSize, shuffle = False, drop_last = False)
         devData = DataLoader(dataset = devSet, batch_size = batchSize, shuffle = False, drop_last = False)
         # Return the training and development data.
         return trainData, devData
 
 # Test the codes.
 if __name__ == "__main__":
-    trainData, devData = Preprocessor.FXTrainData('.//MQ4//FXTrainData', 32, 0.9)
+    trainData, devData = Preprocessor.FXTrainData('.//FXTrade//FXTrainData', 32, 0.9)
     print(f"The length of the train data {len(trainData)}")
     print(f"The length of the dev data {len(devData)}")
     for i, (data, target) in enumerate(trainData):
