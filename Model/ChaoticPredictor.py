@@ -25,36 +25,40 @@ class ChaoticPredictor(nn.Module):
             - outputSize (integer), The output size of the Chaotic Decoder.\n
             - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
+            - attention (bool), The boolean to check whether use the Attention Mechanism.\n
+            - LSTM (bool), The boolean to check whether use the LSTM unit.\n
+            - GRU (bool), The boolean to check whether use the GRU unit.\n
+            - RNN (bool), The boolean to check whether use the RNN unit.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = True):
+    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = True, attention = True, LSTM = False, GRU = False, RNN = False):
         # Create the super constructor.
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
-        self.extractor = FeaturesExtractor()
+        #self.extractor = FeaturesExtractor()
         # Create the encoder.
-        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
+        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic, LSTM = LSTM, GRU = GRU, RNN = RNN)
         # Create the decoder.
-        self.decoder = ChaoticDecoder(inputSize = 2 * hiddenSize, hiddenSize = 4 * hiddenSize, outputSize = outputSize, Lee = Lee, chaotic = chaotic)
+        self.decoder = ChaoticDecoder(hiddenSize = hiddenSize, outputSize = outputSize, Lee = Lee, chaotic = chaotic, attention = attention, LSTM = LSTM, GRU = GRU, RNN = RNN)
     
     # Create the forward propagation.
     def forward(self, x):
         # Compute the output.
-        x = self.extractor(x)
-        x, _ = self.encoder(x)
-        output = self.decoder(x)
+        #x = self.extractor(x)
+        x, hs = self.encoder(x)
+        output = self.decoder(x, hs)
         # Return the output.
         return output
     
 # Create the function to test the Chaotic Predictor.
 if __name__ == "__main__":
     # Get the Lee-Oscillator.
-    Lee = LeeOscillator(device = "cuda")
+    Lee = LeeOscillator()
     # Create the data.
-    x = torch.randn((4, 1, 10, 46)).to(device = "cuda")
-    y = torch.randn((4, 4)).to(device = "cuda")
+    x = torch.randn((32, 10, 5)).to(device = "cuda")
+    y = torch.randn((32, 4)).to(device = "cuda")
     # Create the model.
-    ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 4, Lee = Lee, chaotic = True).to(device = "cuda")
+    ChaoticModel = ChaoticPredictor(inputSize = 5, hiddenSize = 100, outputSize = 4, Lee = Lee, chaotic = True, attention = True, LSTM = True).to(device = "cuda")
     # Create the optimizer.
     optimizer = optim.RMSprop(ChaoticModel.parameters(), lr = 0.01)
     # Create the loss function.
