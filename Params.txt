@@ -1,10 +1,14 @@
+Chaotic:False
+Attention:True
+LSTM:False
+GRU:False
+RNN:True
 LeeTanhType:A
 LeeSigType:B
 K:50
 N:100
-Chaotic:True
-inputSize:4
-hiddenSize:10
+inputSize:5
+hiddenSize:100
 outputSize:4
 learningRate:0.0001
 momentum:0.9
