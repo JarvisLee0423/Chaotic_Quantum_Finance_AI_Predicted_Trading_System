@@ -1,8 +1,8 @@
 Chaotic:True
 Attention:True
-LSTM:True
+LSTM:False
 GRU:False
-RNN:False
+RNN:True
 LeeTanhType:A
 LeeSigType:B
 K:50
