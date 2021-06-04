@@ -29,13 +29,19 @@ class ChaoticPredictor(nn.Module):
             - LSTM (bool), The boolean to check whether use the LSTM unit.\n
             - GRU (bool), The boolean to check whether use the GRU unit.\n
             - RNN (bool), The boolean to check whether use the RNN unit.\n
+            - ResNet (bool), The boolean to check whether use the ResNet based Features Extractor.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = True, attention = True, LSTM = False, GRU = False, RNN = False):
+    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = True, attention = True, LSTM = False, GRU = False, RNN = False, ResNet = False):
         # Create the super constructor.
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
-        #self.extractor = FeaturesExtractor()
+        if ResNet == True:
+            print("The Predictor Applied ResNet.")
+            self.extractor = FeaturesExtractor()
+        else:
+            print("The Predictor didn't apply ResNet.")
+            self.extractor = None
         # Create the encoder.
         self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic, LSTM = LSTM, GRU = GRU, RNN = RNN)
         # Create the decoder.
@@ -44,7 +50,8 @@ class ChaoticPredictor(nn.Module):
     # Create the forward propagation.
     def forward(self, x):
         # Compute the output.
-        #x = self.extractor(x)
+        if self.extractor is not None:
+            x = self.extractor(x)
         x, hs = self.encoder(x)
         output = self.decoder(x, hs)
         # Return the output.
