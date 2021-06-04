@@ -2,8 +2,8 @@ argparse==1.1
 easydict==1.9
 visdom==0.1.8.9
 numpy==1.18.2
-torch==1.5.0
-torchvision==0.6.0
+torch==1.8.1
+torchvision==0.9.1
 tqdm==4.53.0
 pynvml==8.0.4
 pandas==0.25.1
