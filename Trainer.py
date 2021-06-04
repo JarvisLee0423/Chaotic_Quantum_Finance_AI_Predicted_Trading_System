@@ -121,7 +121,7 @@ class Trainer():
                 # Update the parameters.
                 optim.step()
                 # Compute the accuracy.
-                accuracy = (torch.abs(1 - torch.cosine_similarity(prediction, label, dim = 1)) < Cfg.AccBound)
+                accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.AccBound)
                 accuracy = accuracy.sum().float() / len(accuracy)
                 # Store the accuracy.
                 trainAcc.append(accuracy.item())
@@ -168,7 +168,7 @@ class Trainer():
             # Store the loss.
             evalLoss.append(cost.item())
             # Compute the accuracy.
-            accuracy = (torch.abs(1 - torch.cosine_similarity(prediction, label, dim = 1)) < Cfg.AccBound)
+            accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.AccBound)
             accuracy = accuracy.sum().float() / len(accuracy)
             # Store the accuracy.
             evalAcc.append(accuracy.item())
@@ -186,13 +186,16 @@ if __name__ == "__main__":
     # Get the data.
     trainSet, devSet = Preprocessor.FXTrainData(dataDir = Cfg.dataDir, batchSize = Cfg.batchSize, trainPercent = Cfg.trainPercent)
     # Create the model.
-    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN)
+    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN, ResNet = Cfg.ResNet)
     # Send the model to the corresponding device.
     model = model.to(device)
     # Create the loss function.
     loss = nn.MSELoss()
     # Create the optimizer.
-    optimizer = optim.RMSprop(model.parameters(), lr = Cfg.learningRate, momentum = Cfg.momentum, weight_decay = Cfg.weightDecay)
+    optimizer = optim.Adam(model.parameters(), lr = Cfg.learningRate, weight_decay = Cfg.weightDecay)
+    #optimizer = optim.SGD(model.parameters(), lr = Cfg.learningRate, momentum = Cfg.momentum, weight_decay = Cfg.weightDecay)
+    # Create the learning rate decay.
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = 20, eta_min = 1e-10)
     # Train the model.
     for epoch in range(Cfg.epoches):
         # Train the model.
@@ -205,12 +208,14 @@ if __name__ == "__main__":
         else:
             print(' ')
         if evalLoss == None:
-            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc, memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc, optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
         else:
-            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f] || Evaluating: Loss [%.4f] - Acc [%.4f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc, evalLoss, evalAcc, memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f] || Evaluating: Loss [%.4f] - Acc [%.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc, evalLoss, evalAcc, optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
         Logger.VisDrawer(vis = vis, epoch = epoch + 1, trainLoss = trainLoss, evalLoss = evalLoss, trainAcc = trainAcc, evalAcc = evalAcc)
         # Save the model.
         torch.save(model.state_dict(), Cfg.modelDir + f'/{currentTime}.pt')
         logger.info('Model Saved')
+        # Apply the learning rate decay.
+        scheduler.step()
     # Close the visdom server.
     Logger.VisSaver(vis, visName = 'HLCOPredictor')
