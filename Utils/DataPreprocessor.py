@@ -9,6 +9,10 @@ import pandas as pd
 import os
 import torch
 from torch.utils.data import DataLoader
+from Utils.ParamsHandler import Handler
+
+# Get the hyper-parameters' handler.
+Cfg = Handler.Parser(Handler.Generator(paramsDir = './Params.txt'))
 
 # Set the class to generator the dataset.
 class GetDataset(torch.utils.data.Dataset):
@@ -80,7 +84,10 @@ class Preprocessor():
         data = tempData
         target = tempTarget
         # Convert the list to be the tensor.
-        data = torch.tensor(np.array(data), dtype = torch.float32)
+        if Cfg.ResNet == True:
+            data = torch.tensor(np.array(data), dtype = torch.float32).unsqueeze(1)
+        else:
+            data = torch.tensor(np.array(data), dtype = torch.float32)
         target = torch.tensor(np.array(target), dtype = torch.float32).squeeze()
         # Shuffle the raw data.
         dataIndex = []
@@ -90,8 +97,12 @@ class Preprocessor():
         # Get the training data boundary.
         bound = int(data.shape[0] * trainPercent)
         # Generate the datasets.
-        trainSet = GetDataset(data[:bound, :, :], target[:bound, :])
-        devSet = GetDataset(data[bound:, :, :], target[bound:, :])
+        if Cfg.ResNet == True:
+            trainSet = GetDataset(data[:bound, :, :, :], target[:bound, :])
+            devSet = GetDataset(data[bound:, :, :, :], target[bound:, :])
+        else:
+            trainSet = GetDataset(data[:bound, :, :], target[:bound, :])
+            devSet = GetDataset(data[bound:, :, :], target[bound:, :])
         # Get the training data.
         trainData = DataLoader(dataset = trainSet, batch_size = batchSize, shuffle = True, drop_last = False)
         devData = DataLoader(dataset = devSet, batch_size = batchSize, shuffle = False, drop_last = False)
