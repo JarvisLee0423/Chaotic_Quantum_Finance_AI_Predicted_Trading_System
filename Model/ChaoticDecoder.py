@@ -39,9 +39,9 @@ class ChaoticDecoder(nn.Module):
         if attention == True:
             print("The Decoder applied Attention.")
             if LSTM == True:
-                self.CAttention = ChaoticAttention(inputSize = 3 * hiddenSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
+                self.CAttention = ChaoticAttention(inputSize = 3 * hiddenSize, hiddenSize = hiddenSize)
             else:
-                self.CAttention = ChaoticAttention(inputSize = 2 * hiddenSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
+                self.CAttention = ChaoticAttention(inputSize = 2 * hiddenSize, hiddenSize = hiddenSize)
         else:
             print("The Decoder didn't apply Attention.")
             self.CAttention = None
