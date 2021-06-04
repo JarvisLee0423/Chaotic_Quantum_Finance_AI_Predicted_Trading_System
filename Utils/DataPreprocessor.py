@@ -66,16 +66,34 @@ class Preprocessor():
                     target.append(rawTarget.T)
             # Give the hint for completing reading one file's data.
             print(f"{filename}'s data reading is completed!")
+        # Shuffle the raw data.
+        dataIndex = []
+        for i in range(len(data)):
+            dataIndex.append(i)
+        np.random.shuffle(dataIndex)
+        # Rearrange the data.
+        tempData = []
+        tempTarget = []
+        for each in dataIndex:
+            tempData.append(data[each])
+            tempTarget.append(target[each])
+        data = tempData
+        target = tempTarget
         # Convert the list to be the tensor.
         data = torch.tensor(np.array(data), dtype = torch.float32)
         target = torch.tensor(np.array(target), dtype = torch.float32).squeeze()
+        # Shuffle the raw data.
+        dataIndex = []
+        for i in range(data.shape[0]):
+            dataIndex.append(i)
+        np.random.shuffle(dataIndex)
         # Get the training data boundary.
         bound = int(data.shape[0] * trainPercent)
         # Generate the datasets.
         trainSet = GetDataset(data[:bound, :, :], target[:bound, :])
         devSet = GetDataset(data[bound:, :, :], target[bound:, :])
         # Get the training data.
-        trainData = DataLoader(dataset = trainSet, batch_size = batchSize, shuffle = False, drop_last = False)
+        trainData = DataLoader(dataset = trainSet, batch_size = batchSize, shuffle = True, drop_last = False)
         devData = DataLoader(dataset = devSet, batch_size = batchSize, shuffle = False, drop_last = False)
         # Return the training and development data.
         return trainData, devData
