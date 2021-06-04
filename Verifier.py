@@ -36,7 +36,7 @@ if not os.path.exists(Cfg.modelDir):
     assert(False), "Please train the model first!!!"
 
 # Set the hyper-parameter for computing the predicted data.
-modelName = "2021-06-03-18-30-43"
+modelName = "2021-06-03-21-53-15"
 
 # Set the parameters of the Lee Oscillator for tanh.
 if Cfg.LeeTanhType == 'A' or Cfg.LeeTanhType == 'a':
@@ -67,10 +67,11 @@ Lee = LeeOscillator.LeeOscillator(a = a, b = b, K = Cfg.K, N = Cfg.N)
 
 # Do the prediction.
 if __name__ == "__main__":
+    torch.set_printoptions(precision = 8)
     # Get the data.
     trainSet, devSet = Preprocessor.FXTrainData(dataDir = Cfg.dataDir, batchSize = Cfg.batchSize, trainPercent = Cfg.trainPercent)
     # Create the model.
-    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic)
+    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN, ResNet = Cfg.ResNet)
     # Get the model's parameters.
     model.load_state_dict(torch.load(Cfg.modelDir + f"//{modelName}.pt"))
     # Send the model into the corresponding device.
@@ -92,9 +93,10 @@ if __name__ == "__main__":
         for j in range(prediction.shape[0]):
             print("Prediction -> ", prediction[j])
             print("Label -> ", label[j])
+            print("Error ->", torch.abs(prediction[j] - label[j]))
             cmd = input("PAUSE")
             if cmd == "Quit":
                 break
         # Compute the accuracy.
-        accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.EvalAccBound)
+        accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.AccBound)
         accuracy = accuracy.sum().float() / len(accuracy)
