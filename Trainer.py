@@ -121,7 +121,7 @@ class Trainer():
                 # Update the parameters.
                 optim.step()
                 # Compute the accuracy.
-                accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.AccBound)
+                accuracy = ((torch.mean(torch.abs(prediction - label), dim = 1)) < Cfg.AccBound)
                 accuracy = accuracy.sum().float() / len(accuracy)
                 # Store the accuracy.
                 trainAcc.append(accuracy.item())
@@ -168,7 +168,7 @@ class Trainer():
             # Store the loss.
             evalLoss.append(cost.item())
             # Compute the accuracy.
-            accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.AccBound)
+            accuracy = ((torch.mean(torch.abs(prediction - label), dim = 1)) < Cfg.AccBound)
             accuracy = accuracy.sum().float() / len(accuracy)
             # Store the accuracy.
             evalAcc.append(accuracy.item())
