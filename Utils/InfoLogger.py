@@ -7,6 +7,10 @@
 import os
 import logging
 from visdom import Visdom
+from Utils.ParamsHandler import Handler
+
+# Get the hyper-parameters' handler.
+Cfg = Handler.Parser(Handler.Generator(paramsDir = './Params.txt'))
 
 # Set the class to encapsulate the functions.
 class Logger():
@@ -44,14 +48,20 @@ class Logger():
         vis = Visdom(env = visName)
         # Initialize the graphs.
         lossGraph = vis.line(Y = [0], X = [1], opts = dict(legend = ['TrainLoss', 'EvalLoss'], xlabel = 'Epoch', ylabel = 'Loss', title = f'Train and Eval Losses - {currentTime}'), name = 'TrainLoss')
-        accGraph = vis.line(Y = [0], X = [1], opts = dict(legend = ['TrainAcc', 'EvalAcc'], xlabel = 'Epoch', ylabel = 'Acc', title = f'Train and Eval Accs - {currentTime}'), name = 'TrainAcc')
+        accGraphv1 = vis.line(Y = [0], X = [1], opts = dict(legend = ['TrainAccv1', 'EvalAccv1'], xlabel = 'Epoch', ylabel = 'Acc', title = f'Train and Eval Accs-{Cfg.AccBoundv1} - {currentTime}'), name = 'TrainAccv1')
+        accGraphv2 = vis.line(Y = [0], X = [1], opts = dict(legend = ['TrainAccv2', 'EvalAccv2'], xlabel = 'Epoch', ylabel = 'Acc', title = f'Train and Eval Accs-{Cfg.AccBoundv2} - {currentTime}'), name = 'TrainAccv2')
+        accGraphv3 = vis.line(Y = [0], X = [1], opts = dict(legend = ['TrainAccv3', 'EvalAccv3'], xlabel = 'Epoch', ylabel = 'Acc', title = f'Train and Eval Accs-{Cfg.AccBoundv3} - {currentTime}'), name = 'TrainAccv3')
+        accGraphv4 = vis.line(Y = [0], X = [1], opts = dict(legend = ['TrainAccv4', 'EvalAccv4'], xlabel = 'Epoch', ylabel = 'Acc', title = f'Train and Eval Accs-{Cfg.AccBoundv4} - {currentTime}'), name = 'TrainAccv4')
         vis.line(Y = [0], X = [1], win = lossGraph, update = 'append', name = 'EvalLoss')
-        vis.line(Y = [0], X = [1], win = accGraph, update = 'append', name = 'EvalAcc')
+        vis.line(Y = [0], X = [1], win = accGraphv1, update = 'append', name = 'EvalAccv1')
+        vis.line(Y = [0], X = [1], win = accGraphv2, update = 'append', name = 'EvalAccv2')
+        vis.line(Y = [0], X = [1], win = accGraphv3, update = 'append', name = 'EvalAccv3')
+        vis.line(Y = [0], X = [1], win = accGraphv4, update = 'append', name = 'EvalAccv4')
         # Return the visdom.
-        return vis, lossGraph, accGraph
+        return vis, lossGraph, accGraphv1, accGraphv2, accGraphv3, accGraphv4
     
     # Set the function to draw the graph.
-    def VisDrawer(vis, epoch, trainLoss, evalLoss, trainAcc, evalAcc):
+    def VisDrawer(vis, epoch, trainLoss, evalLoss, trainAccv1, evalAccv1, trainAccv2, evalAccv2, trainAccv3, evalAccv3, trainAccv4, evalAccv4):
         '''
             This function is used to draw the graph in visdom.\n
             Params:\n
@@ -70,16 +80,34 @@ class Logger():
             vis[0].line(Y = [trainLoss], X = [epoch], win = vis[1], name = 'TrainLoss', update = 'new')
             if evalLoss != None:
                 vis[0].line(Y = [evalLoss], X = [epoch], win = vis[1], name = 'EvalLoss', update = 'new')
-            vis[0].line(Y = [trainAcc], X = [epoch], win = vis[2], name = 'TrainAcc', update = 'new')
-            if evalAcc != None:
-                vis[0].line(Y = [evalAcc], X = [epoch], win = vis[2], name = 'EvalAcc', update = 'new')
+            vis[0].line(Y = [trainAccv1], X = [epoch], win = vis[2], name = 'TrainAccv1', update = 'new')
+            vis[0].line(Y = [trainAccv2], X = [epoch], win = vis[3], name = 'TrainAccv2', update = 'new')
+            vis[0].line(Y = [trainAccv3], X = [epoch], win = vis[4], name = 'TrainAccv3', update = 'new')
+            vis[0].line(Y = [trainAccv4], X = [epoch], win = vis[5], name = 'TrainAccv4', update = 'new')
+            if evalAccv1 != None:
+                vis[0].line(Y = [evalAccv1], X = [epoch], win = vis[2], name = 'EvalAccv1', update = 'new')
+            if evalAccv2 != None:
+                vis[0].line(Y = [evalAccv2], X = [epoch], win = vis[3], name = 'EvalAccv2', update = 'new')
+            if evalAccv3 != None:
+                vis[0].line(Y = [evalAccv3], X = [epoch], win = vis[4], name = 'EvalAccv3', update = 'new')
+            if evalAccv4 != None:
+                vis[0].line(Y = [evalAccv4], X = [epoch], win = vis[5], name = 'EvalAccv4', update = 'new')
         else:
             vis[0].line(Y = [trainLoss], X = [epoch], win = vis[1], name = 'TrainLoss', update = 'append')
             if evalLoss != None:
                 vis[0].line(Y = [evalLoss], X = [epoch], win = vis[1], name = 'EvalLoss', update = 'append')
-            vis[0].line(Y = [trainAcc], X = [epoch], win = vis[2], name = 'TrainAcc', update = 'append')
-            if evalAcc != None:
-                vis[0].line(Y = [evalAcc], X = [epoch], win = vis[2], name = 'EvalAcc', update = 'append')
+            vis[0].line(Y = [trainAccv1], X = [epoch], win = vis[2], name = 'TrainAccv1', update = 'append')
+            vis[0].line(Y = [trainAccv2], X = [epoch], win = vis[3], name = 'TrainAccv2', update = 'append')
+            vis[0].line(Y = [trainAccv3], X = [epoch], win = vis[4], name = 'TrainAccv3', update = 'append')
+            vis[0].line(Y = [trainAccv4], X = [epoch], win = vis[5], name = 'TrainAccv4', update = 'append')
+            if evalAccv1 != None:
+                vis[0].line(Y = [evalAccv1], X = [epoch], win = vis[2], name = 'EvalAccv1', update = 'append')
+            if evalAccv2 != None:
+                vis[0].line(Y = [evalAccv2], X = [epoch], win = vis[3], name = 'EvalAccv2', update = 'append')
+            if evalAccv3 != None:
+                vis[0].line(Y = [evalAccv3], X = [epoch], win = vis[4], name = 'EvalAccv3', update = 'append')
+            if evalAccv4 != None:
+                vis[0].line(Y = [evalAccv4], X = [epoch], win = vis[5], name = 'EvalAccv4', update = 'append')
     
     # Set the function to configrate the logger.
     def LogConfigurator(logDir, filename, format = "%(asctime)s %(levelname)s %(message)s", dateFormat = "%Y-%m-%d %H:%M:%S %p"):
