@@ -14,7 +14,10 @@ outputSize:4
 learningRate:0.0001
 momentum:0.9
 weightDecay:5e-05
-AccBound:1e-04
+AccBoundv1:5e-02
+AccBoundv2:5e-03
+AccBoundv3:5e-04
+AccBoundv4:5e-05
 trainPercent:0.9
 batchSize:32
 epoches:100
