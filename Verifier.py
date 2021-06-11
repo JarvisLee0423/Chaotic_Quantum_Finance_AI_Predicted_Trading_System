@@ -97,6 +97,3 @@ if __name__ == "__main__":
             cmd = input("PAUSE")
             if cmd == "Quit":
                 break
-        # Compute the accuracy.
-        accuracy = ((torch.sqrt(torch.sum((prediction - label)**2, dim = 1))) < Cfg.AccBound)
-        accuracy = accuracy.sum().float() / len(accuracy)
