@@ -100,7 +100,10 @@ class Trainer():
         '''
         # Initialize the training loss and accuracy.
         trainLoss = []
-        trainAcc = []
+        trainAccv1 = []
+        trainAccv2 = []
+        trainAccv3 = []
+        trainAccv4 = []
         # Set the training loading bar.
         with tqdm(total = len(trainSet), desc = f'Epoch {epoch + 1}/{epoches}', unit = 'batch', dynamic_ncols = True) as pbars:
             # Get the training data.
@@ -121,14 +124,23 @@ class Trainer():
                 # Update the parameters.
                 optim.step()
                 # Compute the accuracy.
-                accuracy = ((torch.mean(torch.abs(prediction - label), dim = 1)) < Cfg.AccBound)
-                accuracy = accuracy.sum().float() / len(accuracy)
+                accuracyv1 = ((torch.abs(prediction - label) < Cfg.AccBoundv1).sum(dim = 1).float() / prediction.shape[1])
+                accuracyv1 = accuracyv1.sum().float() / len(accuracyv1)
+                accuracyv2 = ((torch.abs(prediction - label) < Cfg.AccBoundv2).sum(dim = 1).float() / prediction.shape[1])
+                accuracyv2 = accuracyv2.sum().float() / len(accuracyv2)
+                accuracyv3 = ((torch.abs(prediction - label) < Cfg.AccBoundv3).sum(dim = 1).float() / prediction.shape[1])
+                accuracyv3 = accuracyv3.sum().float() / len(accuracyv3)
+                accuracyv4 = ((torch.abs(prediction - label) < Cfg.AccBoundv4).sum(dim = 1).float() / prediction.shape[1])
+                accuracyv4 = accuracyv4.sum().float() / len(accuracyv4)
                 # Store the accuracy.
-                trainAcc.append(accuracy.item())
+                trainAccv1.append(accuracyv1.item())
+                trainAccv2.append(accuracyv2.item())
+                trainAccv3.append(accuracyv3.item())
+                trainAccv4.append(accuracyv4.item())
                 # Update the loading bar.
                 pbars.update(1)
                 # Update the training info.
-                pbars.set_postfix_str(' - Train Loss %.4f - Train Acc %.4f' % (np.mean(trainLoss), np.mean(trainAcc)))
+                pbars.set_postfix_str(' - Train Loss %.4f - Train Acc [%.4f, %.4f, %.4f, %.4f]' % (np.mean(trainLoss), np.mean(trainAccv1), np.mean(trainAccv2), np.mean(trainAccv3), np.mean(trainAccv4)))
         # Close the loading bar.
         pbars.close()
         # Check whether do the evaluation.
@@ -136,11 +148,11 @@ class Trainer():
             # Print the hint for evaluation.
             print('Evaluating...', end = ' ')
             # Evaluate the model.
-            evalLoss, evalAcc = Trainer.Evaluator(model.eval(), loss, devSet, device)
+            evalLoss, evalAccv1, evalAccv2, evalAccv3, evalAccv4 = Trainer.Evaluator(model.eval(), loss, devSet, device)
             # Print the evaluating result.
-            print('- Eval Loss %.4f - Eval Acc %.4f' % (evalLoss, evalAcc), end = ' ')
+            print('- Eval Loss %.4f - Eval Acc [%.4f, %.4f, %.4f, %.4f]' % (evalLoss, evalAccv1, evalAccv2, evalAccv3, evalAccv4), end = ' ')
             # Return the training result.
-            return model.train(), np.mean(trainLoss), np.mean(trainAcc), evalLoss, evalAcc
+            return model.train(), np.mean(trainLoss), [np.mean(trainAccv1), np.mean(trainAccv2), np.mean(trainAccv3), np.mean(trainAccv4)], evalLoss, [evalAccv1, evalAccv2, evalAccv3, evalAccv4]
         # Return the training result.
         return model.train(), np.mean(trainLoss), np.mean(trainAcc), None, None 
     
@@ -155,7 +167,10 @@ class Trainer():
         '''
         # Initialize the evaluating loss and accuracy.
         evalLoss = []
-        evalAcc = []
+        evalAccv1 = []
+        evalAccv2 = []
+        evalAccv3 = []
+        evalAccv4 = []
         # Get the evaluating data.
         for i, (data, label) in enumerate(devSet):
             # Send the evaluating data into corresponding device.
@@ -168,17 +183,26 @@ class Trainer():
             # Store the loss.
             evalLoss.append(cost.item())
             # Compute the accuracy.
-            accuracy = ((torch.mean(torch.abs(prediction - label), dim = 1)) < Cfg.AccBound)
-            accuracy = accuracy.sum().float() / len(accuracy)
+            accuracyv1 = ((torch.abs(prediction - label) < Cfg.AccBoundv1).sum(dim = 1).float() / prediction.shape[1])
+            accuracyv1 = accuracyv1.sum().float() / len(accuracyv1)
+            accuracyv2 = ((torch.abs(prediction - label) < Cfg.AccBoundv2).sum(dim = 1).float() / prediction.shape[1])
+            accuracyv2 = accuracyv2.sum().float() / len(accuracyv2)
+            accuracyv3 = ((torch.abs(prediction - label) < Cfg.AccBoundv3).sum(dim = 1).float() / prediction.shape[1])
+            accuracyv3 = accuracyv3.sum().float() / len(accuracyv3)
+            accuracyv4 = ((torch.abs(prediction - label) < Cfg.AccBoundv4).sum(dim = 1).float() / prediction.shape[1])
+            accuracyv4 = accuracyv4.sum().float() / len(accuracyv4)
             # Store the accuracy.
-            evalAcc.append(accuracy.item())
+            evalAccv1.append(accuracyv1.item())
+            evalAccv2.append(accuracyv2.item())
+            evalAccv3.append(accuracyv3.item())
+            evalAccv4.append(accuracyv4.item())
         # Return the evaluating result.
-        return np.mean(evalLoss), np.mean(evalAcc)
+        return np.mean(evalLoss), np.mean(evalAccv1), np.mean(evalAccv2), np.mean(evalAccv3), np.mean(evalAccv4)
 
 # Train the model.
 if __name__ == "__main__":
     # Initialize the visdom server.
-    vis = Logger.VisConfigurator(currentTime = currentTime, visName = 'HLCOPredictor')
+    vis = Logger.VisConfigurator(currentTime = currentTime, visName = f'{currentTime}')
     # Initialize the logger.
     logger = Logger.LogConfigurator(logDir = Cfg.logDir, filename = f"{currentTime}.txt")
     # Log the hyperparameters.
@@ -208,14 +232,14 @@ if __name__ == "__main__":
         else:
             print(' ')
         if evalLoss == None:
-            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc, optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
         else:
-            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f] || Evaluating: Loss [%.4f] - Acc [%.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc, evalLoss, evalAcc, optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
-        Logger.VisDrawer(vis = vis, epoch = epoch + 1, trainLoss = trainLoss, evalLoss = evalLoss, trainAcc = trainAcc, evalAcc = evalAcc)
+            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || Evaluating: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], evalLoss, evalAcc[0], evalAcc[1], evalAcc[2], evalAcc[3], optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+        Logger.VisDrawer(vis = vis, epoch = epoch + 1, trainLoss = trainLoss, evalLoss = evalLoss, trainAccv1 = trainAcc[0], trainAccv2 = trainAcc[1], trainAccv3 = trainAcc[2], trainAccv4 = trainAcc[3], evalAccv1 = evalAcc[0], evalAccv2 = evalAcc[1], evalAccv3 = evalAcc[2], evalAccv4 = evalAcc[3])
         # Save the model.
         torch.save(model.state_dict(), Cfg.modelDir + f'/{currentTime}.pt')
         logger.info('Model Saved')
         # Apply the learning rate decay.
         scheduler.step()
     # Close the visdom server.
-    Logger.VisSaver(vis, visName = 'HLCOPredictor')
+    Logger.VisSaver(vis, visName = f'{currentTime}')
