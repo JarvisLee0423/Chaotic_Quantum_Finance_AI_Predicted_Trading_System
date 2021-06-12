@@ -37,7 +37,7 @@ class ChaoticPredictor(nn.Module):
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
         if ResNet == True:
-            print("The Predictor Applied ResNet.")
+            print("The Predictor applied ResNet.")
             self.extractor = FeaturesExtractor()
         else:
             print("The Predictor didn't apply ResNet.")
