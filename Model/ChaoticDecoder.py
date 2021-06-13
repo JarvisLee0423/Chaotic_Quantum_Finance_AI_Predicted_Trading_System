@@ -23,17 +23,21 @@ class ChaoticDecoder(nn.Module):
             - outputSize (integer), The output size of the Chaotic Decoder.\n 
             - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
+            - bidirection (bool), The boolean to check whether apply the Bi-Model.\n
             - attention (bool), The boolean to check whether use the Attention Mechanism.\n
             - LSTM (bool), The boolean to check whether use the LSTM unit.\n
             - GRU (bool), The boolean to check whether use the GRU unit.\n
             - RNN (bool), The boolean to check whether use the RNN unit.\n
     '''
     # Create the constructor.
-    def __init__(self, hiddenSize, outputSize, Lee, chaotic = False, attention = False, LSTM = False, GRU = False, RNN = False):
+    def __init__(self, hiddenSize, outputSize, Lee, chaotic = False, bidirection = False, attention = False, LSTM = False, GRU = False, RNN = False):
         # Create the super constructor.
         super(ChaoticDecoder, self).__init__()
         # Get the member variables.
-        self.hiddenSize = hiddenSize
+        if bidirection == True:
+            self.hiddenSize = 2 * hiddenSize
+        else:
+            self.hiddenSize = hiddenSize
         self.LSTM = LSTM
         # Create the Chaotic attention.
         if attention == True:
@@ -45,15 +49,15 @@ class ChaoticDecoder(nn.Module):
         # Create the Chaotic Decoder.
         if LSTM == True:
             print("The Decoder applied LSTM unit.")
-            self.unit = ChaoticLSTM(inputSize = hiddenSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
+            self.unit = ChaoticLSTM(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
         elif GRU == True:
             print("The Decoder applied GRU unit.")
-            self.unit = ChaoticGRU(inputSize = hiddenSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
+            self.unit = ChaoticGRU(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
         else:
             print("The Decoder applied RNN unit.")
-            self.unit = ChaoticRNN(inputSize = hiddenSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic)
+            self.unit = ChaoticRNN(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
         # Create the Fully Connected Layer.
-        self.fc = nn.Linear(hiddenSize, outputSize)
+        self.fc = nn.Linear(self.hiddenSize, outputSize)
     
     # Create the forward propagation.
     def forward(self, x, hs = None):
@@ -116,87 +120,194 @@ class ChaoticDecoder(nn.Module):
 if __name__ == "__main__":
     # Get the Lee-Oscillator.
     Lee = LeeOscillator()
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, attention = True, LSTM = True)
-    # Test the Chaotic Decoder.
+    # Create the Chaotic LSTM Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = True, attention = True, LSTM = True)
+    # Test the Chaotic LSTM Decoder with Attention.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device), torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the Chaotic GRU Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = True, attention = True, GRU = True)
+    # Test the Chaotic GRU Decoder with Attention.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the Chaotic RNN Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = True, attention = True, RNN = True)
+    # Test the Chaotic RNN Decoder with Attention.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the LSTM Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = True, attention = True, LSTM = True)
+    # Test the LSTM Decoder with Attention.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device), torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the GRU Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = True, attention = True, GRU = True)
+    # Test the GRU Decoder with Attention.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the RNN Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = True, attention = True, RNN = True)
+    # Test the RNN Decoder with Attention.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the Chaotic LSTM Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = True, attention = False, LSTM = True)
+    # Test the Chaotic LSTM Decoder.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device), torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the Chaotic GRU Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = True, attention = False, GRU = True)
+    # Test the Chaotic GRU Decoder.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the Chaotic RNN Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = True, attention = False, RNN = True)
+    # Test the Chaotic RNN Decoder.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the LSTM Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = True, attention = False, LSTM = True)
+    # Test the LSTM Decoder.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device), torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the GRU Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = True, attention = False, GRU = True)
+    # Test the GRU Decoder.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the RNN Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = True, attention = False, RNN = True)
+    # Test the RNN Decoder.
+    x = torch.randn((32, 10, 20))
+    hs = (torch.zeros(32, 20).to(x.device))
+    output = CDecoder(x, hs)
+    print(output.shape)
+
+    # Create the Chaotic LSTM Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = False, attention = True, LSTM = True)
+    # Test the Chaotic LSTM Decoder with Attention.
     x = torch.randn((32, 10, 10))
     hs = (torch.zeros(32, 10).to(x.device), torch.zeros(32, 10).to(x.device))
     output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, attention = True, GRU = True)
-    # Test the Chaotic Decoder.
+    # Create the Chaotic GRU Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = False, attention = True, GRU = True)
+    # Test the Chaotic GRU Decoder with Attention.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, attention = True, RNN = True)
-    # Test the Chaotic Decoder.
+    # Create the Chaotic RNN Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = False, attention = True, RNN = True)
+    # Test the Chaotic RNN Decoder with Attention.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, LSTM = True)
-    # Test the Chaotic Decoder.
+    # Create the LSTM Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = False, attention = True, LSTM = True)
+    # Test the LSTM Decoder with Attention.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device), torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, GRU = True)
-    # Test the Chaotic Decoder.
+    # Create the GRU Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = False, attention = True, GRU = True)
+    # Test the GRU Decoder with Attention.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, RNN = True)
-    # Test the Chaotic Decoder.
+    # Create the RNN Decoder with Attention.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = False, attention = True, RNN = True)
+    # Test the RNN Decoder with Attention.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, LSTM = True)
-    # Test the Chaotic Decoder.
+    # Create the Chaotic LSTM Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = False, attention = False, LSTM = True)
+    # Test the Chaotic LSTM Decoder.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device), torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, GRU = True)
-    # Test the Chaotic Decoder.
+    # Create the Chaotic GRU Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = False, attention = False, GRU = True)
+    # Test the Chaotic GRU Decoder.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, RNN = True)
-    # Test the Chaotic Decoder.
+    # Create the Chaotic RNN Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = True, bidirection = False, attention = False, RNN = True)
+    # Test the Chaotic RNN Decoder.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, attention = True, LSTM = True)
-    # Test the Chaotic Decoder.
+    # Create the LSTM Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = False, attention = False, LSTM = True)
+    # Test the LSTM Decoder.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device), torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, attention = True, GRU = True)
-    # Test the Chaotic Decoder.
+    # Create the GRU Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = False, attention = False, GRU = True)
+    # Test the GRU Decoder.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
 
-    # Create the Chaotic Decoder.
-    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, attention = True, RNN = True)
-    # Test the Chaotic Decoder.
+    # Create the RNN Decoder.
+    CDecoder = ChaoticDecoder(10, 1, Lee = Lee, chaotic = False, bidirection = False, attention = False, RNN = True)
+    # Test the RNN Decoder.
     x = torch.randn((32, 10, 10))
-    output = CDecoder(x)
+    hs = (torch.zeros(32, 10).to(x.device))
+    output = CDecoder(x, hs)
     print(output.shape)
