@@ -42,6 +42,10 @@ class ChaoticPredictor(nn.Module):
         else:
             print("The Predictor didn't apply ResNet.")
             self.extractor = None
+        if chaotic == True:
+            print("The Predictor applied Lee-Oscillator.")
+        else:
+            print("The Predictor didn't applied Lee-Oscillator.")
         # Create the encoder.
         self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic, LSTM = LSTM, GRU = GRU, RNN = RNN)
         # Create the decoder.
@@ -65,7 +69,7 @@ if __name__ == "__main__":
     x = torch.randn((32, 10, 5)).to(device = "cuda")
     y = torch.randn((32, 4)).to(device = "cuda")
     # Create the model.
-    ChaoticModel = ChaoticPredictor(inputSize = 5, hiddenSize = 100, outputSize = 4, Lee = Lee, chaotic = True, attention = True, LSTM = True).to(device = "cuda")
+    ChaoticModel = ChaoticPredictor(inputSize = 5, hiddenSize = 100, outputSize = 1, Lee = Lee, chaotic = True, attention = True, LSTM = True).to(device = "cuda")
     # Create the optimizer.
     optimizer = optim.RMSprop(ChaoticModel.parameters(), lr = 0.01)
     # Create the loss function.
