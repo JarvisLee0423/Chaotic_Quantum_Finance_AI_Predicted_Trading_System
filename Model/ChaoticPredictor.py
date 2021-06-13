@@ -25,6 +25,7 @@ class ChaoticPredictor(nn.Module):
             - outputSize (integer), The output size of the Chaotic Decoder.\n
             - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
+            - bidirection (bool), The boolean to check whether apply the Bi-Model.\n
             - attention (bool), The boolean to check whether use the Attention Mechanism.\n
             - LSTM (bool), The boolean to check whether use the LSTM unit.\n
             - GRU (bool), The boolean to check whether use the GRU unit.\n
@@ -32,7 +33,7 @@ class ChaoticPredictor(nn.Module):
             - ResNet (bool), The boolean to check whether use the ResNet based Features Extractor.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = True, attention = True, LSTM = False, GRU = False, RNN = False, ResNet = False):
+    def __init__(self, inputSize, hiddenSize, outputSize, Lee, chaotic = False, bidirection = False, attention = False, LSTM = False, GRU = False, RNN = False, ResNet = False):
         # Create the super constructor.
         super(ChaoticPredictor, self).__init__()
         # Create the Extractor.
@@ -47,9 +48,9 @@ class ChaoticPredictor(nn.Module):
         else:
             print("The Predictor didn't applied Lee-Oscillator.")
         # Create the encoder.
-        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic, LSTM = LSTM, GRU = GRU, RNN = RNN)
+        self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic, bidirection = bidirection, LSTM = LSTM, GRU = GRU, RNN = RNN)
         # Create the decoder.
-        self.decoder = ChaoticDecoder(hiddenSize = hiddenSize, outputSize = outputSize, Lee = Lee, chaotic = chaotic, attention = attention, LSTM = LSTM, GRU = GRU, RNN = RNN)
+        self.decoder = ChaoticDecoder(hiddenSize = hiddenSize, outputSize = outputSize, Lee = Lee, chaotic = chaotic, bidirection = bidirection, attention = attention, LSTM = LSTM, GRU = GRU, RNN = RNN)
     
     # Create the forward propagation.
     def forward(self, x):
@@ -66,12 +67,12 @@ if __name__ == "__main__":
     # Get the Lee-Oscillator.
     Lee = LeeOscillator()
     # Create the data.
-    x = torch.randn((32, 10, 5)).to(device = "cuda")
+    x = torch.randn((32, 1, 10, 46)).to(device = "cuda")
     y = torch.randn((32, 4)).to(device = "cuda")
     # Create the model.
-    ChaoticModel = ChaoticPredictor(inputSize = 5, hiddenSize = 100, outputSize = 1, Lee = Lee, chaotic = True, attention = True, LSTM = True).to(device = "cuda")
+    ChaoticModel = ChaoticPredictor(inputSize = 4, hiddenSize = 10, outputSize = 1, Lee = Lee, chaotic = True, bidirection = True, attention = True, LSTM = True, ResNet = True).to(device = "cuda")
     # Create the optimizer.
-    optimizer = optim.RMSprop(ChaoticModel.parameters(), lr = 0.01)
+    optimizer = optim.Adam(ChaoticModel.parameters(), lr = 0.01, weight_decay = 5e-05)
     # Create the loss function.
     loss = nn.MSELoss()
     # Train the model.
