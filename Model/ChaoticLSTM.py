@@ -20,21 +20,31 @@ class ChaoticLSTM(nn.Module):
             - hiddenSize (integer), The output size of the Chaotic LSTM.\n
             - Lee (LeeOscillator), The Lee-Oscillator.\n
             - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
+            - bidirection (bool),  The boolean to check whether apply the Bi-LSTM.\n
     '''
     # Create the constructor.
-    def __init__(self, inputSize, hiddenSize, Lee, chaotic = True):
+    def __init__(self, inputSize, hiddenSize, Lee, chaotic = False, bidirection = False):
         # Create the super constructor.
         super(ChaoticLSTM, self).__init__()
         # Get the member variables.
         self.inputSize = inputSize
         self.hiddenSize = hiddenSize
         self.chaotic = chaotic
+        self.bidirection = bidirection
         # Create the parameter of the input.
         self.Wi = nn.Parameter(torch.Tensor(inputSize, hiddenSize * 4))
         # Create the parameter of the hidden.
         self.Wh = nn.Parameter(torch.Tensor(hiddenSize, hiddenSize * 4))
         # Create the parameter of the bias.
         self.B = nn.Parameter(torch.Tensor(hiddenSize * 4))
+        # Check the number of directions.
+        if bidirection == True:
+            # Create the parameter of the inverse input.
+            self.Winvi = nn.Parameter(torch.Tensor(inputSize, hiddenSize * 4))
+            # Create the parameter of the inverse hidden.
+            self.Winvh = nn.Parameter(torch.Tensor(hiddenSize, hiddenSize * 4))
+            # Create the parameter of the inverse bias.
+            self.Binv = nn.Parameter(torch.Tensor(hiddenSize * 4))
         # Initialize the parameters.
         self.initParams()
         # Create the chaotic activation function.
@@ -54,11 +64,17 @@ class ChaoticLSTM(nn.Module):
         bs, seqs, _ = x.size()
         # Create the list to store the output.
         output = []
-        # Initialize the hidden, cell.
+        # Initialize the hidden, cell, inverse hidden and inverse cell.
         if initStates is None:
-            ht, ct = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
+            if self.bidirection == True:
+                ht, ct, hinvt, cinvt = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
+            else:
+                ht, ct = (torch.zeros(bs, self.hiddenSize).to(x.device), torch.zeros(bs, self.hiddenSize).to(x.device))
         else:
-            ht, ct = initStates
+            if self.bidirection == True:
+                ht, ct, hinvt, cinvt = initStates
+            else:
+                ht, ct = initStates
         # Compute the LSTM.
         for t in range(seqs):
             # Get the xt.
@@ -86,10 +102,45 @@ class ChaoticLSTM(nn.Module):
                 # Compute the cell and hidden.
                 ct = ft * ct + it * gt
                 ht = ot * torch.tanh(ct).to(x.device)
-            # Store the output value.
+            # Store the forward value.
             output.append(ht.unsqueeze(1))
+        # Check the direction.
+        if self.bidirection == True:
+            for t in range(seqs - 1, -1, -1):
+                # Get the xinvt.
+                xinvt = x[:, t, :]
+                # Compute the inverse gates
+                gatesInv = xinvt @ self.Winvi + hinvt @ self.Winvh + self.Binv
+                # Get the value of the output.
+                if self.chaotic == True:
+                    # Get the value of each inverse gate.
+                    iinvt, finvt, ginvt, oinvt = (
+                        self.Lee.Sigmoid(gatesInv[:, :self.hiddenSize]).to(x.device),
+                        self.Lee.Sigmoid(gatesInv[:, self.hiddenSize:self.hiddenSize * 2]).to(x.device),
+                        self.Lee.Tanh(gatesInv[:, self.hiddenSize * 2:self.hiddenSize * 3]).to(x.device),
+                        self.Lee.Sigmoid(gatesInv[:, self.hiddenSize * 3:]).to(x.device)
+                    )
+                    # Compute the inverse cell and hidden.
+                    cinvt = finvt * cinvt + iinvt * ginvt
+                    hinvt = oinvt * self.Lee.Tanh(cinvt).to(x.device)
+                else:
+                    # Get the value of each inverse gate.
+                    iinvt, finvt, ginvt, oinvt = (
+                        torch.sigmoid(gatesInv[:, :self.hiddenSize]).to(x.device),
+                        torch.sigmoid(gatesInv[:, self.hiddenSize:self.hiddenSize * 2]).to(x.device),
+                        torch.tanh(gatesInv[:, self.hiddenSize * 2:self.hiddenSize * 3]).to(x.device),
+                        torch.sigmoid(gatesInv[:, self.hiddenSize * 3:]).to(x.device)
+                    )
+                    # Compute the inverse cell and hidden.
+                    cinvt = finvt * cinvt + iinvt * ginvt
+                    hinvt = oinvt * torch.tanh(cinvt).to(x.device)
+                # Store the backward value.
+                output[t] = torch.cat([output[t], hinvt.unsqueeze(1)], dim = 2)
+            # Concatenate the hidden and cell.
+            ht = torch.cat([ht, hinvt], dim = 1)
+            ct = torch.cat([ct, cinvt], dim = 1) 
         # Concatenate the output, hidden and cell.
-        output = torch.cat(output, dim = 1)
+        output = torch.cat(output, dim = 1)   
         # Return the output, hidden and cell.
         return output, (ht, ct)
 
@@ -97,10 +148,20 @@ class ChaoticLSTM(nn.Module):
 if __name__ == "__main__":
     # Get the Lee-Oscillator.
     Lee = LeeOscillator()
-    # Create the Chaotic LSTM unit.
-    CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10, Lee = Lee)
-    # Test the Chaotic LSTM.
-    x = torch.randn((32, 9, 4))
+    # Create the Bi-LSTM unit.
+    CLSTM = ChaoticLSTM(inputSize = 46, hiddenSize = 10, Lee = Lee, chaotic = False, bidirection = True)
+    # Test the Bi-LSTM.
+    x = torch.randn((32, 10, 46))
+    print(x.shape)
+    output, (h, c) = CLSTM(x)
+    print(output.shape)
+    print(h.shape)
+    print(c.shape)
+
+    # Create the Chaotic Bi-LSTM unit.
+    CLSTM = ChaoticLSTM(inputSize = 46, hiddenSize = 10, Lee = Lee, chaotic = True, bidirection = True)
+    # Test the Chaotic Bi-LSTM.
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, (h, c) = CLSTM(x)
     print(output.shape)
@@ -108,9 +169,19 @@ if __name__ == "__main__":
     print(c.shape)
 
     # Create the Chaotic LSTM unit.
-    CLSTM = ChaoticLSTM(inputSize = 4, hiddenSize = 10, Lee = Lee, chaotic = False)
+    CLSTM = ChaoticLSTM(inputSize = 46, hiddenSize = 10, Lee = Lee, chaotic = True, bidirection = False)
     # Test the Chaotic LSTM.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
+    print(x.shape)
+    output, (h, c) = CLSTM(x)
+    print(output.shape)
+    print(h.shape)
+    print(c.shape)
+
+    # Create the LSTM unit.
+    CLSTM = ChaoticLSTM(inputSize = 46, hiddenSize = 10, Lee = Lee, chaotic = False, bidirection = False)
+    # Test the LSTM.
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, (h, c) = CLSTM(x)
     print(output.shape)
