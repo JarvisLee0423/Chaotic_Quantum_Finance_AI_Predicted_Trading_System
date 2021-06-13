@@ -53,9 +53,9 @@ if __name__ == "__main__":
     # Get the Lee-Oscillator.
     Lee = LeeOscillator()
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, LSTM = True)
+    CEncoder = ChaoticEncoder(46, 10, Lee = Lee, LSTM = True)
     # Test the Chaotic Encoder.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, hidden = CEncoder(x)
     print(output.shape)
@@ -63,27 +63,27 @@ if __name__ == "__main__":
     print(hidden[1].shape)
 
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, GRU = True)
+    CEncoder = ChaoticEncoder(46, 10, Lee = Lee, GRU = True)
     # Test the Chaotic Encoder.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, hidden = CEncoder(x)
     print(output.shape)
     print(hidden.shape)
 
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, RNN = True)
+    CEncoder = ChaoticEncoder(46, 10, Lee = Lee, RNN = True)
     # Test the Chaotic Encoder.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, hidden = CEncoder(x)
     print(output.shape)
     print(hidden.shape)
 
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, chaotic = False, LSTM = True)
+    CEncoder = ChaoticEncoder(46, 10, Lee = Lee, chaotic = False, LSTM = True)
     # Test the Chaotic Encoder.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, hidden = CEncoder(x)
     print(output.shape)
@@ -91,18 +91,18 @@ if __name__ == "__main__":
     print(hidden[1].shape)
 
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, chaotic = False, GRU = True)
+    CEncoder = ChaoticEncoder(46, 10, Lee = Lee, chaotic = False, GRU = True)
     # Test the Chaotic Encoder.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, hidden = CEncoder(x)
     print(output.shape)
     print(hidden.shape)
 
     # Create the Chaotic Encoder.
-    CEncoder = ChaoticEncoder(4, 10, Lee = Lee, chaotic = False, RNN = True)
+    CEncoder = ChaoticEncoder(46, 10, Lee = Lee, chaotic = False, RNN = True)
     # Test the Chaotic Encoder.
-    x = torch.randn((32, 9, 4))
+    x = torch.randn((32, 10, 46))
     print(x.shape)
     output, hidden = CEncoder(x)
     print(output.shape)
