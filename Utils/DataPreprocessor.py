@@ -61,10 +61,10 @@ class Preprocessor():
             # Split the raw data into training data.
             for i in range(0, raw.shape[0]):
                 # Check whether there are still 11 data are remained.
-                if (raw.shape[0] - i >= 11):
+                if (raw.shape[0] - i >= Cfg.Days + 1):
                     # Get the raw data.
-                    rawData = raw[i:(i + 10), :]
-                    rawTarget = raw[(i + 10):(i + 11), :4]
+                    rawData = raw[i:(i + Cfg.Days), :]
+                    rawTarget = raw[(i + Cfg.Days):(i + Cfg.Days + 1), :4]
                     # Add the data into the data and target.
                     data.append(rawData)
                     target.append(rawTarget.T)
