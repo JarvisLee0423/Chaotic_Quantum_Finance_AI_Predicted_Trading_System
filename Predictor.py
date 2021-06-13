@@ -69,7 +69,7 @@ if __name__ == "__main__":
     # Read and preprocess the data.
     predData = torch.tensor(np.array(pd.read_csv(Cfg.predDataDir + "//" + predDataFileName, index_col = (0)).values), dtype = torch.float32).to(device).unsqueeze(0).unsqueeze(0)
     # Create the model.
-    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic)
+    model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, bidirection = Cfg.Bidirection, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN, ResNet = Cfg.ResNet)
     # Get the model's parameters.
     model.load_state_dict(torch.load(Cfg.modelDir + f"//{modelName}.pt"))
     # Send the model into the corresponding device.
