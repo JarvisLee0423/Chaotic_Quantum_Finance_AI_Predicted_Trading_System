@@ -72,7 +72,7 @@ class ChaoticRNN(nn.Module):
                 ht = torch.zeros(bs, self.hiddenSize).to(x.device)
         else:
             if self.bidirection == True:
-                ht, hinvt = (initStates[:, :(self.hiddenSize // 2)], initStates[:, (self.hiddenSize // 2):])
+                ht, hinvt = initStates
             else:
                 ht = initStates
         # Compute the RNN.
