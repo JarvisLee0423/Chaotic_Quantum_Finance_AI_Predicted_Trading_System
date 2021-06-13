@@ -7,6 +7,7 @@ GRU:False
 RNN:False
 LeeTanhType:A
 LeeSigType:A
+Days:20
 K:50
 N:100
 inputSize:4
