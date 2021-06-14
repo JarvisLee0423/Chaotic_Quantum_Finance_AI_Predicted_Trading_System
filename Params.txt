@@ -13,7 +13,7 @@ N:100
 inputSize:4
 hiddenSize:10
 outputSize:1
-learningRate:0.0005
+learningRate:0.0001
 momentum:0.9
 weightDecay:5e-05
 AccBoundv1:5e-02
