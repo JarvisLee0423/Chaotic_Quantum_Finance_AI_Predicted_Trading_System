@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                              FLTradeStrategy.mq4 |
+//|                                                FLRPVStrategy.mq4 |
 //|                Copyright 2021, J. Lee, J. Huang, O. Lin, V. Guo. |
 //|                                                  http://qffc.org |
 //+------------------------------------------------------------------+
@@ -30,13 +30,13 @@ double   Q[100];
 double   NQ[100];
 double   r[100];   
 // Declare array for NQPR related arrays.
-double   QFEL[21];
-double   QPR[21];
+double   QFEL[21];               // The QFEL for the current product.
+double   QPR[21];                // The QPR for the current product.
 double   NQPR[21];               // The NQPR for the current product.
 double   QPLs[42];               // The QPLs for the current product.
 double   PQPL[21];               // The positive QPL for the current product.
 double   NQPL[21];               // The negative QPL for the current product.
-double   K[21];
+double   K[21];                  // The K value for the current product.
 // Set the variables to store the boundaries of the RPV.
 double   RPVBound[5];            // The array for RPV Boundaries.
 double   RPV[2048];              // The array for RPV values.
@@ -50,7 +50,7 @@ int      DataFileHandle;         // The data file handle.
 string   HLCOPredFileName = "";  // The predicted HLCO filename.
 int      HLCOPredFileHandle;     // The predicted HLCO file handle.
 string   TrainDataFileName = ""; // The train data filename.
-int      TrainDataFileHandle;      // The train data file handle.
+int      TrainDataFileHandle;    // The train data file handle.
 
 // Define the product symbol variables.
 string   TPSymbol = "";          // The current product symbol.
@@ -65,8 +65,8 @@ double   sPrice = 0;             // The string of the current price of the produ
 double   cOpen = 0;              // The current open for the current product.
 double   cRPV = 0;               // The current relative price volatility.
 double   cRSI = 0;               // The current relative strength index.
-double   nBuy_Pass = 30.0;      // The threshold of over sell for RSI.
-double   nSell_Pass = 70.0;     // The threshold of over buy for RSI.
+double   nBuy_Pass = 30.0;       // The threshold of over sell for RSI.
+double   nSell_Pass = 70.0;      // The threshold of over buy for RSI.
 double   iRPV[3];                // The implication value of the RPV.
 double   icRSI[3];               // The implication value of the current RSI.
 double   DF = 0;                 // The value of the defuzzification.
