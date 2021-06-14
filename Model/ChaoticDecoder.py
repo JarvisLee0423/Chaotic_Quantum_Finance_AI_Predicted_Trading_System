@@ -83,14 +83,10 @@ class ChaoticDecoder(nn.Module):
                 for _ in range(4):
                     output, (ht, ct) = self.unit(ht.unsqueeze(1), (ht, ct))
                     outputs.append(output)
-                outputs = torch.cat(outputs, dim = 1)
-                outputs = outputs.view(outputs.shape[0] * outputs.shape[1], -1)
             else:
                 for _ in range(4):
                     output, ht = self.unit(ht.unsqueeze(1), ht)
                     outputs.append(output)
-                outputs = torch.cat(outputs, dim = 1)
-                outputs = outputs.view(outputs.shape[0] * outputs.shape[1], -1)
         else:
             # Get the output.
             if self.LSTM == True:
@@ -100,8 +96,6 @@ class ChaoticDecoder(nn.Module):
                     # Compute the output.
                     output, (ht, ct) = self.unit(context, (ht, ct))
                     outputs.append(output)
-                outputs = torch.cat(outputs, dim = 1)
-                outputs = outputs.view(outputs.shape[0] * outputs.shape[1], -1)
             else:
                 for _ in range(4):
                     # Compute the attention.
@@ -109,9 +103,9 @@ class ChaoticDecoder(nn.Module):
                     # Compute the output.
                     output, ht = self.unit(context, ht)
                     outputs.append(output)
-                outputs = torch.cat(outputs, dim = 1)
-                outputs = outputs.view(outputs.shape[0] * outputs.shape[1], -1)
         # Get the output.
+        outputs = torch.cat(outputs, dim = 1)
+        outputs = outputs.view(outputs.shape[0] * outputs.shape[1], -1)
         outputs = self.fc(outputs).reshape(bs, 4)
         # Return the output.
         return outputs
