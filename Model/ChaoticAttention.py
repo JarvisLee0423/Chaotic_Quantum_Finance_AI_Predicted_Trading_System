@@ -20,15 +20,12 @@ class ChaoticAttention(nn.Module):
     def __init__(self, hiddenSize):
         # Create the super constructor.
         super(ChaoticAttention, self).__init__()
-        # Get the linear layer.
-        #self.linear = nn.Linear(hiddenSize, hiddenSize)
         # Get the softmax.
         self.softmax = nn.Softmax(dim = 1)
     
     # Create the forward propagation.
     def forward(self, x, h):
         # Compute the alpha.
-        #alpha = self.softmax(self.linear(torch.bmm(x, h.unsqueeze(2)).squeeze()))
         alpha = self.softmax(torch.bmm(x, h.unsqueeze(2)).squeeze())
         # Compute the context.
         context = torch.bmm(alpha.unsqueeze(1), x)
