@@ -42,7 +42,7 @@ class ChaoticDecoder(nn.Module):
         # Create the Chaotic attention.
         if attention == True:
             print("The Decoder applied Attention.")
-            self.CAttention = ChaoticAttention()
+            self.CAttention = ChaoticAttention(self.hiddenSize)
         else:
             print("The Decoder didn't apply Attention.")
             self.CAttention = None
