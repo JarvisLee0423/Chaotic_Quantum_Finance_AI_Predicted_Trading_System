@@ -18,7 +18,7 @@ double   auxR, maxQ, r0, r1, rn1;
 double   dr, Lup, Ldw, L, mu, sigma;
 bool     bFound;
 // Variables used in Cardano's Method.
-double   p, q, u, v;   
+double   p, q, u, v;
 // Declare time series array.
 double   DT_OP[2048];
 double   DT_HI[2048];
