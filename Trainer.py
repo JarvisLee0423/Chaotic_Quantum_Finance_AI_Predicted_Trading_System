@@ -216,11 +216,11 @@ if __name__ == "__main__":
     # Create the loss function.
     loss = nn.MSELoss()
     # Create the optimizer.
-    #optimizer = optim.Adam(model.parameters(), lr = Cfg.learningRate, weight_decay = Cfg.weightDecay)
-    optimizer = optim.RMSprop(model.parameters(), lr = Cfg.learningRate, weight_decay = Cfg.weightDecay, momentum = Cfg.momentum)
+    optimizer = optim.Adam(model.parameters(), lr = Cfg.learningRate, weight_decay = Cfg.weightDecay)
+    #optimizer = optim.RMSprop(model.parameters(), lr = Cfg.learningRate, weight_decay = Cfg.weightDecay, momentum = Cfg.momentum)
     #optimizer = optim.SGD(model.parameters(), lr = Cfg.learningRate, momentum = Cfg.momentum, weight_decay = Cfg.weightDecay)
     # Create the learning rate decay.
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = 5, eta_min = 1e-4)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = 20, eta_min = 1e-10)
     # Train the model.
     for epoch in range(Cfg.epoches):
         # Train the model.
