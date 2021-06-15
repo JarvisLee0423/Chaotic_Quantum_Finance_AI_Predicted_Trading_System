@@ -57,7 +57,7 @@ class ChaoticDecoder(nn.Module):
             print("The Decoder applied RNN unit.")
             self.unit = ChaoticRNN(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
         # Create the Fully Connected Layer.
-        self.fc = nn.Linear(self.hiddenSize, outputSize)
+        self.fc = nn.Linear(4 * self.hiddenSize, outputSize)
     
     # Create the forward propagation.
     def forward(self, x, hs = None):
@@ -105,8 +105,8 @@ class ChaoticDecoder(nn.Module):
                     outputs.append(output)
         # Get the output.
         outputs = torch.cat(outputs, dim = 1)
-        outputs = outputs.view(outputs.shape[0] * outputs.shape[1], -1)
-        outputs = self.fc(outputs).reshape(bs, 4)
+        outputs = outputs.view(outputs.shape[0], outputs.shape[1] * output.shape[2])
+        outputs = self.fc(outputs)
         # Return the output.
         return outputs
 
