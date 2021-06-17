@@ -22,7 +22,6 @@ class ChaoticDecoder(nn.Module):
             - hiddenSize (integer), The output size of the Chaotic Decoder.\n
             - outputSize (integer), The output size of the Chaotic Decoder.\n 
             - Lee (LeeOscillator), The Lee-Oscillator.\n
-            - chaotic (bool), The boolean to check whether use the Chaotic Mode.\n
             - bidirection (bool), The boolean to check whether apply the Bi-Model.\n
             - attention (bool), The boolean to check whether use the Attention Mechanism.\n
             - LSTM (bool), The boolean to check whether use the LSTM unit.\n
@@ -30,7 +29,7 @@ class ChaoticDecoder(nn.Module):
             - RNN (bool), The boolean to check whether use the RNN unit.\n
     '''
     # Create the constructor.
-    def __init__(self, hiddenSize, outputSize, Lee, chaotic = False, bidirection = False, attention = False, LSTM = False, GRU = False, RNN = False):
+    def __init__(self, hiddenSize, outputSize, Lee, bidirection = False, attention = False, LSTM = False, GRU = False, RNN = False):
         # Create the super constructor.
         super(ChaoticDecoder, self).__init__()
         # Get the member variables.
@@ -49,13 +48,13 @@ class ChaoticDecoder(nn.Module):
         # Create the Chaotic Decoder.
         if LSTM == True:
             print("The Decoder applied LSTM unit.")
-            self.unit = ChaoticLSTM(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
+            self.unit = ChaoticLSTM(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee)
         elif GRU == True:
             print("The Decoder applied GRU unit.")
-            self.unit = ChaoticGRU(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
+            self.unit = ChaoticGRU(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee)
         else:
             print("The Decoder applied RNN unit.")
-            self.unit = ChaoticRNN(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee, chaotic = chaotic)
+            self.unit = ChaoticRNN(inputSize = self.hiddenSize, hiddenSize = self.hiddenSize, Lee = Lee)
         # Create the Fully Connected Layer.
         self.fc = nn.Linear(4 * self.hiddenSize, outputSize)
     
