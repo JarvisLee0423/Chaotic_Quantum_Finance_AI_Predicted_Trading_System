@@ -58,6 +58,9 @@ elif Cfg.LeeTanhType == 'C' or Cfg.LeeTanhType == 'c':
 elif Cfg.LeeTanhType == 'D' or Cfg.LeeTanhType == 'd':
     a = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
+elif Cfg.LeeTanhType == 'E' or Cfg.LeeTanhType == 'e':
+    a = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Set the parameters of the Lee Oscillator for sigmoid.
@@ -70,6 +73,9 @@ elif Cfg.LeeSigType == 'C' or Cfg.LeeSigType == 'c':
 elif Cfg.LeeSigType == 'D' or Cfg.LeeSigType == 'd':
     b = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
+elif Cfg.LeeSigType == 'E' or Cfg.LeeSigType == 'e':
+    a = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Compute the Lee-Oscillator.
@@ -220,7 +226,7 @@ if __name__ == "__main__":
     #optimizer = optim.RMSprop(model.parameters(), lr = Cfg.learningRate, weight_decay = Cfg.weightDecay, momentum = Cfg.momentum)
     #optimizer = optim.SGD(model.parameters(), lr = Cfg.learningRate, momentum = Cfg.momentum, weight_decay = Cfg.weightDecay)
     # Create the learning rate decay.
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = 20, eta_min = 1e-10)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = 100, eta_min = 1e-10)
     # Train the model.
     for epoch in range(Cfg.epoches):
         # Train the model.
