@@ -49,6 +49,15 @@ class Preprocessor():
         This class contains four parts:\n
             - 'FXTrainData' is the 10 Futures' 2048 days' data.\n
     '''
+    # Set the function to compute the normalization.
+    def Normalization(x, ymin = -1, ymax = 1):
+        # Get the xmax and xmin.
+        xmax = np.max(x, axis = 0)
+        xmin = np.min(x, axis = 0)
+        # Normalize the input.
+        output = (ymax - ymin) * (x - xmin) / (xmax - xmin) + ymin
+        # Return the output.
+        return output, xmax, xmin
     # Set the function to preprocess the FX training data.
     def FXTrainData(dataDir, batchSize, trainPercent):
         # Set the list to store the training data.
@@ -58,6 +67,18 @@ class Preprocessor():
         for filename in os.listdir(dataDir):
             # Read the data in each file.
             raw = np.array(pd.read_csv(dataDir + "//" + filename, index_col = (0)).values)
+            # Check whether do the normalization.
+            if Cfg.Normalize == True:
+                # Normalize the data.
+                raw, max, min = Preprocessor.Normalization(raw)
+                # Store the max and min to do the denormalization.
+                if not os.path.exists(".//FXTrade//FXMax") or not os.path.exists(".//FXTrade//FXMin"):
+                    os.mkdir(".//FXTrade//FXMax")
+                    os.mkdir(".//FXTrade//FXMin")
+                norm = pd.DataFrame(max)
+                norm.to_csv(".//FXTrade//FXMax" + f"//{filename}", index = None, header = None)
+                norm = pd.DataFrame(min)
+                norm.to_csv(".//FXTrade//FXMin" + f"//{filename}", index = None, header = None)
             # Split the raw data into training data.
             for i in range(0, raw.shape[0]):
                 # Check whether there are still 11 data are remained.
