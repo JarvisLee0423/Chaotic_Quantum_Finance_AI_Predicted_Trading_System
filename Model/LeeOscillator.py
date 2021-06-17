@@ -171,7 +171,7 @@ class LeeOscillator():
 # Create the main function to test the Lee-Oscillator.
 if __name__ == "__main__":
     # Get the parameters list of the Lee-Oscillator.
-    a = [1, 1, 1, 1, -1, -1, -1, -1]
+    a = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
     b = [0.6, 0.6, -0.5, 0.5, -0.6, -0.6, -0.5, 0.5]
     # Create the Lee-Oscillator's model.
     Lee = LeeOscillator(a, b, 50, 100)
