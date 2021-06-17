@@ -50,7 +50,7 @@ class ChaoticPredictor(nn.Module):
         # Create the encoder.
         self.encoder = ChaoticEncoder(inputSize = inputSize, hiddenSize = hiddenSize, Lee = Lee, chaotic = chaotic, bidirection = bidirection, LSTM = LSTM, GRU = GRU, RNN = RNN)
         # Create the decoder.
-        self.decoder = ChaoticDecoder(hiddenSize = hiddenSize, outputSize = outputSize, Lee = Lee, chaotic = chaotic, bidirection = bidirection, attention = attention, LSTM = LSTM, GRU = GRU, RNN = RNN)
+        self.decoder = ChaoticDecoder(hiddenSize = hiddenSize, outputSize = outputSize, Lee = Lee, bidirection = bidirection, attention = attention, LSTM = LSTM, GRU = GRU, RNN = RNN)
     
     # Create the forward propagation.
     def forward(self, x):
