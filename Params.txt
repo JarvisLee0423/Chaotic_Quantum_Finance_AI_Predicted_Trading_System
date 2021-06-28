@@ -1,6 +1,6 @@
 Chaotic:True
 Attention:True
-ResNet:True
+ResNet:False
 Bidirection:True
 LSTM:True
 GRU:False
@@ -11,7 +11,7 @@ LeeSigType:E
 Days:20
 K:50
 N:100
-inputSize:4
+inputSize:46
 hiddenSize:10
 outputSize:4
 learningRate:0.0005
@@ -29,5 +29,5 @@ GPUID:0
 modelDir:.//Checkpoints
 logDir:.//Logs
 dataDir:.//FXTrade//FXTrainData
-prededDir:.//FXTrade//FXPreded
-predDataDir:.//FXTrade//FXPredData//
+prededDir:.//Backtest//BacktestData//Pred//
+predDataDir:.//Backtest//BacktestData//Train//
