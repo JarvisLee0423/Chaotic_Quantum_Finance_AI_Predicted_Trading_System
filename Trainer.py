@@ -74,7 +74,7 @@ elif Cfg.LeeSigType == 'D' or Cfg.LeeSigType == 'd':
     b = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
 elif Cfg.LeeSigType == 'E' or Cfg.LeeSigType == 'e':
-    a = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    b = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
     Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
@@ -239,9 +239,15 @@ if __name__ == "__main__":
         else:
             print(' ')
         if evalLoss == None:
-            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            if Cfg.GPUID > -1:
+                logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            else:
+                logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f]' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], optimizer.state_dict()['param_groups'][0]['lr']))
         else:
-            logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || Evaluating: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], evalLoss, evalAcc[0], evalAcc[1], evalAcc[2], evalAcc[3], optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            if Cfg.GPUID > -1:
+                logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || Evaluating: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f] || Memory: [%.4f/%.4f] MB' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], evalLoss, evalAcc[0], evalAcc[1], evalAcc[2], evalAcc[3], optimizer.state_dict()['param_groups'][0]['lr'], memory, pynvml.nvmlDeviceGetMemoryInfo(handle).total / 1024 / 1024))
+            else:
+                logger.info('Epoch [%d/%d] -> Training: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || Evaluating: Loss [%.4f] - Acc [%.4f, %.4f, %.4f, %.4f] || lr: [%.10f]' % (epoch + 1, Cfg.epoches, trainLoss, trainAcc[0], trainAcc[1], trainAcc[2], trainAcc[3], evalLoss, evalAcc[0], evalAcc[1], evalAcc[2], evalAcc[3], optimizer.state_dict()['param_groups'][0]['lr']))
         Logger.VisDrawer(vis = vis, epoch = epoch + 1, trainLoss = trainLoss, evalLoss = evalLoss, trainAccv1 = trainAcc[0], trainAccv2 = trainAcc[1], trainAccv3 = trainAcc[2], trainAccv4 = trainAcc[3], evalAccv1 = evalAcc[0], evalAccv2 = evalAcc[1], evalAccv3 = evalAcc[2], evalAccv4 = evalAcc[3])
         # Save the model.
         torch.save(model.state_dict(), Cfg.modelDir + f'/{currentTime}.pt')
