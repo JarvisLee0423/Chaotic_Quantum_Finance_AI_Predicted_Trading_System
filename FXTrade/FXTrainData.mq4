@@ -248,23 +248,20 @@ int OnInit()
       "QPL+9", "QPL+10", "QPL+11", "QPL+12", "QPL+13", "QPL+14", "QPL+15", "QPL+16", "QPL+17", "QPL+18", "QPL+19", "QPL+20", "QPL+21", "QPL-1", "QPL-2",
       "QPL-3", "QPL-4", "QPL-5", "QPL-6", "QPL-7", "QPL-8", "QPL-9", "QPL-10", "QPL-11", "QPL-12", "QPL-13", "QPL-14", "QPL-15", "QPL-16",
       "QPL-17", "QPL-18", "QPL-19", "QPL-20", "QPL-21");
+      //FileWrite(Currency_QPL_FileHandle, "Date", "Open", "High", "Low", "Close", "Volume");
       
-      // Compute and store all the training data into the file.
-      for (d = 1; d < TSsize; d++)
+      // Store the data into the csv.
+      for (d = /*102*/(TSsize - 2); d >= /*11*/0; d--)
       {
          // Compute each QPL.
          for (eL = 0; eL < 21; eL++)
          {
-            ALL_Pos_QPL[eL] = DT_OP[d - 1] * NQPR[eL];
-            ALL_Neg_QPL[eL] = DT_OP[d - 1] / NQPR[eL];
+            ALL_Pos_QPL[eL] = DT_OP[d] * NQPR[eL];
+            ALL_Neg_QPL[eL] = DT_OP[d] / NQPR[eL];
          }
-      }
-      // Store the data into the csv.
-      for (d = (TSsize - 1); d > 0; d--)
-      {
          // Store the training data into the file.
-         FileWrite(Currency_QPL_FileHandle, IntegerToString(DT_YY[d - 1]) + "/" + IntegerToString(DT_MM[d - 1]) + "/" + IntegerToString(DT_DD[d - 1]),
-             DoubleToString(DT_OP[d - 1], TP_nD[nTP]), DoubleToString(DT_HI[d - 1], TP_nD[nTP]), DoubleToString(DT_LO[d - 1], TP_nD[nTP]), DoubleToString(DT_CL[d - 1], TP_nD[nTP]),
+         FileWrite(Currency_QPL_FileHandle, IntegerToString(DT_YY[d]) + "/" + IntegerToString(DT_MM[d]) + "/" + IntegerToString(DT_DD[d]),
+             DT_OP[d], DT_HI[d], DT_LO[d], DT_CL[d],
              ALL_Pos_QPL[0], ALL_Pos_QPL[1], ALL_Pos_QPL[2], ALL_Pos_QPL[3], ALL_Pos_QPL[4],
              ALL_Pos_QPL[5], ALL_Pos_QPL[6], ALL_Pos_QPL[7], ALL_Pos_QPL[8], ALL_Pos_QPL[9],
              ALL_Pos_QPL[10], ALL_Pos_QPL[11], ALL_Pos_QPL[12], ALL_Pos_QPL[13], ALL_Pos_QPL[14],
@@ -273,6 +270,9 @@ int OnInit()
              ALL_Neg_QPL[5], ALL_Neg_QPL[6], ALL_Neg_QPL[7], ALL_Neg_QPL[8], ALL_Neg_QPL[9],
              ALL_Neg_QPL[10], ALL_Neg_QPL[11], ALL_Neg_QPL[12], ALL_Neg_QPL[13], ALL_Neg_QPL[14],
              ALL_Neg_QPL[15], ALL_Neg_QPL[16], ALL_Neg_QPL[17], ALL_Neg_QPL[18], ALL_Neg_QPL[19], ALL_Neg_QPL[20]);
+         // Store the training data into the file.
+         //FileWrite(Currency_QPL_FileHandle, IntegerToString(DT_YY[d - 1]) + "/" + IntegerToString(DT_MM[d - 1]) + "/" + IntegerToString(DT_DD[d - 1]),
+         //    DoubleToString(DT_OP[d - 1], TP_nD[nTP]), DoubleToString(DT_HI[d - 1], TP_nD[nTP]), DoubleToString(DT_LO[d - 1], TP_nD[nTP]), DoubleToString(DT_CL[d - 1], TP_nD[nTP]), DoubleToString(DT_VL[d-1], TP_nD[nTP]));
       }
       // Close file.
       FileClose(Currency_QPL_FileHandle);
