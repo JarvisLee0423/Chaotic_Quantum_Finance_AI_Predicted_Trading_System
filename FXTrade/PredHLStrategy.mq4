@@ -34,6 +34,7 @@ string            sBuy_Signal = "NOSIG";  // The signal value for buy.
 bool              bSell_Stop = false;     // The signal for stopping sell order.
 bool              bSell_Pass = false;     // The signal for sell order.
 string            sSell_Signal = "NOSIG"; // The signal value for sell.
+bool              updatedData = false;    // The signal for updating the data.
 
 // Set the predicted values directory.
 string            DataDir = "FXStrategy"; // The data directory.
@@ -68,8 +69,8 @@ int OnInit()
     // Close the file.
     FileClose(HLCOPredFileHandle);
     // Rectify the predicted value.
-    predH = RectifyPred(pClose, predO, predH);
-    predL = RectifyPred(pClose, predO, predL);
+    //predH = RectifyPred(pClose, predO, predH);
+    //predL = RectifyPred(pClose, predO, predL);
     // Get the buy and sell pass.
     nSell_Pass = predH;
     nBuy_Pass = predL;
@@ -89,8 +90,8 @@ int OnInit()
     //     // Get the previous close.
     //     pClose = iClose(TPSymbol, PERIOD_D1, 1);
     //     // Rectify the predicted value.
-    //     predH = RectifyPred(pClose, predO, predH);
-    //     predL = RectifyPred(pClose, predO, predL);
+    //     //predH = RectifyPred(pClose, predO, predH);
+    //     //predL = RectifyPred(pClose, predO, predL);
     //     // Get the buy and sell pass.
     //     nSell_Pass = predH;
     //     nBuy_Pass = predL;
@@ -131,6 +132,7 @@ void OnTick()
         bSell_Stop = false;
         bSell_Pass = false;
         sSell_Signal = "NOSIG";
+        updatedData = false;
     }
     // Check whether reach the sleep time.
     if (TimeHour(TimeLocal()) >= 21)
@@ -140,7 +142,7 @@ void OnTick()
         bSell_Stop = true;
         sSell_Signal = "SLEEPING";
 
-        if (TimeHour(TimeLocal()) == 21)
+        if (TimeHour(TimeLocal()) == 21 && !updatedData)
         {
             // Get the prediction.
             HLCOPredFileName = TPSymbol + "_Pred.csv";
@@ -155,8 +157,8 @@ void OnTick()
             // Get the previous close.
             pClose = iClose(TPSymbol, PERIOD_D1, 0);
             // Rectify the predicted value.
-            predH = RectifyPred(pClose, predO, predH);
-            predL = RectifyPred(pClose, predO, predL);
+            //predH = RectifyPred(pClose, predO, predH);
+            //predL = RectifyPred(pClose, predO, predL);
             // Get the buy and sell pass.
             nSell_Pass = predH;
             nBuy_Pass = predL;
@@ -174,13 +176,15 @@ void OnTick()
             // // Get the previous close.
             // pClose = iClose(TPSymbol, PERIOD_D1, 0);
             // // Rectify the predicted value.
-            // predH = RectifyPred(pClose, predO, predH);
-            // predL = RectifyPred(pClose, predO, predL);
+            // //predH = RectifyPred(pClose, predO, predH);
+            // //predL = RectifyPred(pClose, predO, predL);
             // // Get the buy and sell pass.
             // nSell_Pass = predH;
             // nBuy_Pass = predL;
             // // Decrease the trading day.
             // tradeDay = tradeDay - 1;
+            // Updated the data.
+            updatedData = true;
         }
     }
     // Prevent more buy order if there are some outstanding buy orders.
