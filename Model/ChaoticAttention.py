@@ -26,7 +26,7 @@ class ChaoticAttention(nn.Module):
     # Create the forward propagation.
     def forward(self, x, h):
         # Compute the alpha.
-        alpha = self.softmax(torch.bmm(x, h.unsqueeze(2)).squeeze())
+        alpha = self.softmax(torch.bmm(x, h.unsqueeze(2)).squeeze(2))
         # Compute the context.
         context = torch.bmm(alpha.unsqueeze(1), x)
         # Return the context.
