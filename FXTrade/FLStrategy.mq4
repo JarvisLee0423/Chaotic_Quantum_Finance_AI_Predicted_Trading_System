@@ -54,21 +54,22 @@ double            predO = 0;              // The predicted open for the next day
 double            predC = 0;              // The predicted close for the next day.
 double            predH = 0;              // The predicted high for the next day.
 double            predL = 0;              // The predicted low for the next day.
-double            nBuy_Pass = 30;         // The threshold of buying.
-double            nSell_Pass = 70;        // The threshold of selling.
+double            nBuy_Pass = 20;         // The threshold of buying.
+double            nSell_Pass = 80;        // The threshold of selling.
 static double     QPLBounds[4];           // The boundaries of the Quantum Price Level.
 static double     HLBounds[4];            // The boundaries of the High and Low.
 static double     iQPL[3];                // The implication value of the QPL. 
 static double     iHL[3];                 // The implication value of the HL.
 double            DF = 0;                 // The value of the defuzzification.
-int               sl = 200;               // The stop loss.
-int               tp = 250;               // The target profits.
+int               sl = 150;               // The stop loss.
+int               tp = 300;               // The target profits.
 bool              bBuy_Stop = false;      // The signal for stopping buy order.
 bool              bBuy_Pass = false;      // The signal for buy order.
 string            sBuy_Signal = "NOSIG";  // The signal value for buy.
 bool              bSell_Stop = false;     // The signal for stopping sell order.
 bool              bSell_Pass = false;     // The signal for sell order.
 string            sSell_Signal = "NOSIG"; // The signal value for sell.
+bool              updatedData = false;    // The signal for updating the data.
 
 // Set the predicted values directory.
 string            DataDir = "FXStrategy"; // The data directory.
@@ -107,9 +108,9 @@ int OnInit()
     // Close the file.
     FileClose(HLCOPredFileHandle);
     // Rectify the predicted value.
-    predH = RectifyPred(pClose, predO, predH);
-    predL = RectifyPred(pClose, predO, predL);
-    predO = RectifyPred(pClose, predO, predO);
+    //predH = RectifyPred(pClose, predO, predH);
+    //predL = RectifyPred(pClose, predO, predL);
+    //predO = RectifyPred(pClose, predO, predO);
     // Get the QPL boundaries.
     QPLBounds[0] = predO / NQPR[1];
     QPLBounds[1] = predO / NQPR[0];
@@ -140,9 +141,9 @@ int OnInit()
     //     // Close the file.
     //     FileClose(HLCOPredFileHandle);
     //     // Rectify the predicted value.
-    //     predH = RectifyPred(pClose, predO, predH);
-    //     predL = RectifyPred(pClose, predO, predL);
-    //     predO = RectifyPred(pClose, predO, predO);
+    //     //predH = RectifyPred(pClose, predO, predH);
+    //     //predL = RectifyPred(pClose, predO, predL);
+    //     //predO = RectifyPred(pClose, predO, predO);
     //     // Get the QPL boundaries.
     //     QPLBounds[0] = predO / NQPR[1];
     //     QPLBounds[1] = predO / NQPR[0];
@@ -203,6 +204,7 @@ void OnTick()
         bSell_Stop = false;
         bSell_Pass = false;
         sSell_Signal = "NOSIG";
+        updatedData = false;
     }
     // Check whether reach the sleep time.
     if (TimeHour(TimeLocal()) >= 21)
@@ -212,7 +214,7 @@ void OnTick()
         bSell_Stop = true;
         sSell_Signal = "SLEEPING";
 
-        if (TimeHour(TimeLocal()) == 21)
+        if (TimeHour(TimeLocal()) == 21 && !updatedData)
         {
             // Get the train data.
             TrainDataFileName = TPSymbol + "_Train.csv";
@@ -263,9 +265,9 @@ void OnTick()
             // Close the file.
             FileClose(HLCOPredFileHandle);
             // Rectify the predicted value.
-            predH = RectifyPred(pClose, predO, predH);
-            predL = RectifyPred(pClose, predO, predL);
-            predO = RectifyPred(pClose, predO, predO);
+            //predH = RectifyPred(pClose, predO, predH);
+            //predL = RectifyPred(pClose, predO, predL);
+            //predO = RectifyPred(pClose, predO, predO);
             // Get the QPL boundaries.
             QPLBounds[0] = predO / NQPR[1];
             QPLBounds[1] = predO / NQPR[0];
@@ -294,9 +296,9 @@ void OnTick()
             // // Close the file.
             // FileClose(HLCOPredFileHandle);
             // // Rectify the predicted value.
-            // predH = RectifyPred(pClose, predO, predH);
-            // predL = RectifyPred(pClose, predO, predL);
-            // predO = RectifyPred(pClose, predO, predO);
+            // //predH = RectifyPred(pClose, predO, predH);
+            // //predL = RectifyPred(pClose, predO, predL);
+            // //predO = RectifyPred(pClose, predO, predO);
             // // Get the QPL boundaries.
             // QPLBounds[0] = predO / NQPR[1];
             // QPLBounds[1] = predO / NQPR[0];
@@ -311,6 +313,8 @@ void OnTick()
             // HLBounds[3] = RectifyPredH(predH);
             // // Decrease the trading day.
             // tradeDay = tradeDay - 1;
+            // Updated the data.
+            updatedData = true;
         }
     }
     // Prevent more buy order if there are some outstanding buy orders.
