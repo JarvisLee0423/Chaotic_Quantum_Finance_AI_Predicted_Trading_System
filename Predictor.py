@@ -33,9 +33,7 @@ if not os.path.exists(Cfg.modelDir):
     assert(False), "Please train the model first!!!"
 
 # Set the hyper-parameters for computing and storing the predicted data.
-modelName = "xxxxxxxxxx"
-predDataFileName = "xxxxxxxxxx_Train.csv"
-prededFileName = predDataFileName.split("_")[0] + "_Pred.csv"
+modelName = "Chaotic"
 
 # Set the parameters of the Lee Oscillator for tanh.
 if Cfg.LeeTanhType == 'A' or Cfg.LeeTanhType == 'a':
@@ -47,6 +45,9 @@ elif Cfg.LeeTanhType == 'C' or Cfg.LeeTanhType == 'c':
 elif Cfg.LeeTanhType == 'D' or Cfg.LeeTanhType == 'd':
     a = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
+elif Cfg.LeeTanhType == 'E' or Cfg.LeeTanhType == 'e':
+    a = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Set the parameters of the Lee Oscillator for sigmoid.
@@ -59,6 +60,9 @@ elif Cfg.LeeSigType == 'C' or Cfg.LeeSigType == 'c':
 elif Cfg.LeeSigType == 'D' or Cfg.LeeSigType == 'd':
     b = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
+elif Cfg.LeeSigType == 'E' or Cfg.LeeSigType == 'e':
+    b = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Get the lee-oscillator.
@@ -66,19 +70,37 @@ Lee = LeeOscillator.LeeOscillator(a = a, b = b, K = Cfg.K, N = Cfg.N)
 
 # Do the prediction.
 if __name__ == "__main__":
-    # Read and preprocess the data.
-    predData = torch.tensor(np.array(pd.read_csv(Cfg.predDataDir + "//" + predDataFileName, index_col = (0)).values), dtype = torch.float32).to(device).unsqueeze(0).unsqueeze(0)
     # Create the model.
     model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, bidirection = Cfg.Bidirection, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN, ResNet = Cfg.ResNet)
     # Get the model's parameters.
-    model.load_state_dict(torch.load(Cfg.modelDir + f"//{modelName}.pt"))
+    model.load_state_dict(torch.load(f".//Backtest//BacktestModel//{modelName}.pt", map_location = 'cuda:0'))
     # Send the model into the corresponding device.
     model = model.to(device)
     # Change the model type to evaluation.
     model = model.eval()
-    # Feed the data into the model and get the prediction.
-    preded = model(predData)
-    # Store the prediction into the csv file.
-    preded = np.array(torch.reshape(preded.to("cpu").clone().detach().requires_grad_(False), (4, 1)))
-    preded = pd.DataFrame(preded)
-    preded.to_csv(Cfg.prededDir + f"//{prededFileName}", index = None, header = None)
+    # Read the data in each file.
+    for filename in os.listdir(Cfg.predDataDir):
+        # Create the directory.
+        if not os.path.exists(Cfg.prededDir + f"{filename.split('_')[0]}"):
+            os.mkdir(Cfg.prededDir + f"{filename.split('_')[0]}")
+        # Read the data in each file.
+        raw = np.array(pd.read_csv(Cfg.predDataDir + "//" + filename, index_col = (0)).values)
+        # Split the raw data into training data.
+        for i in range(0, raw.shape[0]):
+            # Get the predicted file name.
+            prededFileName = f"{71 - i}_" + filename.split("_")[0] + "_Pred.csv"
+            # Check whether there are still 11 data are remained.
+            if (raw.shape[0] - i >= Cfg.Days + 1):
+                # Get the raw data.
+                rawData = raw[i:(i + Cfg.Days), :]
+                rawTarget = raw[(i + Cfg.Days):(i + Cfg.Days + 1), :4]
+                # Convert the data into tensor.
+                data = torch.tensor(rawData, dtype = torch.float32).to(device).unsqueeze(0)
+                # Feed the data into the model and get the prediction.
+                preded = model(data)
+                # Store the prediction into the csv file.
+                preded = np.array(torch.reshape(preded.to("cpu").clone().detach().requires_grad_(False), (4, 1)))
+                preded = pd.DataFrame(preded)
+                preded.to_csv(Cfg.prededDir + f"{filename.split('_')[0]}//{prededFileName}", index = None, header = None)
+        # Give the hint for completing reading one file's data.
+        print(f"{filename}'s data prediction is completed!")
