@@ -45,8 +45,8 @@ double            sPrice = 0;             // The string of the current price of 
 double            pClose = 0;             // The previous close for the current product.
 double            nBuy_Pass;              // The threshold of buying.
 double            nSell_Pass;             // The threshold of selling.
-int               sl = 200;               // The stop loss.
-int               tp = 250;               // The target profits.
+int               sl = 150;               // The stop loss.
+int               tp = 300;               // The target profits.
 bool              bBuy_Stop = false;      // The signal for stopping buy order.
 bool              bBuy_Pass = false;      // The signal for buy order.
 string            sBuy_Signal = "NOSIG";  // The signal value for buy.
