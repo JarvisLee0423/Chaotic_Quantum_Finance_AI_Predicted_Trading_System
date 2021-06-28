@@ -48,6 +48,9 @@ elif Cfg.LeeTanhType == 'C' or Cfg.LeeTanhType == 'c':
 elif Cfg.LeeTanhType == 'D' or Cfg.LeeTanhType == 'd':
     a = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
+elif Cfg.LeeTanhType == 'E' or Cfg.LeeTanhType == 'e':
+    a = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Set the parameters of the Lee Oscillator for sigmoid.
@@ -60,6 +63,9 @@ elif Cfg.LeeSigType == 'C' or Cfg.LeeSigType == 'c':
 elif Cfg.LeeSigType == 'D' or Cfg.LeeSigType == 'd':
     b = [1, 1, 1, 1, -1, -1, -1, -1]
     Cfg.K = 300
+elif Cfg.LeeSigType == 'E' or Cfg.LeeSigType == 'e':
+    b = [-0.2, 0.45, 0.6, 1, 0, -0.55, 0.55, 0]
+    Cfg.K = 100
 else:
     assert(False), "Invalid Lee-Oscillator Type"
 # Get the lee-oscillator.
@@ -73,7 +79,7 @@ if __name__ == "__main__":
     # Create the model.
     model = ChaoticPredictor.ChaoticPredictor(inputSize = Cfg.inputSize, hiddenSize = Cfg.hiddenSize, outputSize = Cfg.outputSize, Lee = Lee, chaotic = Cfg.Chaotic, bidirection = Cfg.Bidirection, attention = Cfg.Attention, LSTM = Cfg.LSTM, GRU = Cfg.GRU, RNN = Cfg.RNN, ResNet = Cfg.ResNet)
     # Get the model's parameters.
-    model.load_state_dict(torch.load(Cfg.modelDir + f"//{modelName}.pt"))
+    model.load_state_dict(torch.load(Cfg.modelDir + f"//{modelName}.pt", map_location = "cuda:0"))
     # Send the model into the corresponding device.
     model = model.to(device)
     # Change the model type to evaluation.
