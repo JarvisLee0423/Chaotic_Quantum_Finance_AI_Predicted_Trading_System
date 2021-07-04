@@ -29,5 +29,5 @@ GPUID:0
 modelDir:.//Checkpoints
 logDir:.//Logs
 dataDir:.//FXTrade//FXTrainData
-prededDir:.//Backtest//BacktestData//Pred//
-predDataDir:.//Backtest//BacktestData//Train//
+prededDir:.//Experiments//Backtest//BacktestData//Pred//
+predDataDir:.//Experiments//Backtest//BacktestData//Train//
