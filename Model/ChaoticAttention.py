@@ -27,10 +27,10 @@ class ChaoticAttention(nn.Module):
     def forward(self, x, h):
         # Compute the alpha.
         alpha = self.softmax(torch.bmm(x, h.unsqueeze(2)).squeeze(2))
-        # Compute the context.
-        context = torch.bmm(alpha.unsqueeze(1), x)
+        # Compute the content.
+        content = torch.bmm(alpha.unsqueeze(1), x)
         # Return the context.
-        return context
+        return content
 
 # Create the main function to test the Chaotic Attention Mechanism.
 if __name__ == "__main__":
