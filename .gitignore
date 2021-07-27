@@ -83,3 +83,14 @@ fabric.properties
 *.docx
 *.pptx
 *.zip
+*.aux
+*.bbl
+*.blg
+*.log
+*.spl
+*.gz
+*.tex
+*.sty
+*.bst
+*.cls
+*.bib
