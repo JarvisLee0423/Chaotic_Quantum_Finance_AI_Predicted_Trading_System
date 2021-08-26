@@ -1,5 +1,5 @@
 # Chaotic_Quantum_Finance_AI_Predicted_Trading_System
- Resnet-18 and Attention Mechanism Based Fuzzy Logic Trade System
+ Chaotic Bi-LSTM and Attention HLCO Predictor Based Quantum Price Level Fuzzy Logic Trading System
 
 Contributors:
 
@@ -100,6 +100,6 @@ Trading Strategy:
 
     The trading strategy is based on Fuzzy Logic.
 
-    We design a Fuzzy Logic with the RPV (Relative Price Volatility) and RSI (Relative Strength Index).
+    We designed a Fuzzy Logic with the predicted High and Low values and Quantum Price Levels.
 
-    More details please check the sub-routines in the FXTradeStrategy.mq4 file.
+    More details please check the sub-routines in the FLStrategy.mq4 file.
