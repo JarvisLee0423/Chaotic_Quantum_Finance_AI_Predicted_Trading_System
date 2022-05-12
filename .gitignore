@@ -94,3 +94,5 @@ fabric.properties
 *.bst
 *.cls
 *.bib
+*.eps
+*.out
