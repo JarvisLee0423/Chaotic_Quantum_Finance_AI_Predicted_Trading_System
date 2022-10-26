@@ -1,6 +1,10 @@
 # Chaotic_Quantum_Finance_AI_Predicted_Trading_System
  Chaotic Bi-LSTM and Attention HLCO Predictor Based Quantum Price Level Fuzzy Logic Trading System
 
+Paper:
+
+    https://assets.researchsquare.com/files/rs-1819548/v1_covered.pdf?c=1657741593
+
 Contributors:
 
     Jiahao Li:    https://github.com/JarvisLee0423
